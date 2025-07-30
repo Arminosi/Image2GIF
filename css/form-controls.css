@@ -1,0 +1,206 @@
+/**
+ * 表单控件样式
+ * @description 滑块、单选按钮、颜色选择器等表单元素样式
+ */
+
+/* ================================
+   滑块控件
+   ================================ */
+.custom-slider {
+    flex: 1;
+    height: 6px;
+    background: linear-gradient(to right, var(--primary-green), var(--primary-blue));
+    border-radius: 5px;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    background: linear-gradient(to right, var(--primary-green), var(--primary-blue));
+    border-radius: 5px;
+    outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, var(--primary-blue), var(--primary-blue-dark));
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgba(33, 150, 243, 0.4);
+    transition: var(--transition-normal);
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.6);
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, var(--primary-blue), var(--primary-blue-dark));
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgba(33, 150, 243, 0.4);
+    border: none;
+    transition: var(--transition-normal);
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.6);
+}
+
+/* ================================
+   单选按钮
+   ================================ */
+input[type="radio"] + span {
+    transition: var(--transition-normal);
+}
+
+label:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+    background: rgba(255,255,255,0.95) !important;
+}
+
+/* ================================
+   颜色选择器
+   ================================ */
+input[type="color"] {
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: var(--transition-normal);
+}
+
+input[type="color"]:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* ================================
+   复选框
+   ================================ */
+input[type="checkbox"] {
+    accent-color: var(--primary-blue);
+    cursor: pointer;
+}
+
+/* ================================
+   文本输入框
+   ================================ */
+input[type="text"],
+input[type="number"],
+textarea {
+    border: 2px solid rgba(224, 224, 224, 0.6);
+    border-radius: var(--radius-small);
+    padding: 8px 12px;
+    font-family: inherit;
+    font-size: 14px;
+    transition: var(--transition-fast);
+    outline: none;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+textarea:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+}
+
+/* ================================
+   表单标签
+   ================================ */
+label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.8);
+    border-radius: var(--radius-large);
+    cursor: pointer;
+    transition: var(--transition-normal);
+    box-shadow: var(--shadow-small);
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+label:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    background: rgba(255,255,255,0.95);
+}
+
+/* ================================
+   表单组
+   ================================ */
+.form-group {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(255,255,255,0.7);
+    border-radius: var(--radius-medium);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+
+.form-group label[for] {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 1.1em;
+    background: none;
+    box-shadow: none;
+    padding: 0;
+}
+
+.form-group label[for]:hover {
+    transform: none;
+    box-shadow: none;
+    background: none;
+}
+
+.form-control-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.form-control-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.form-help-text {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 8px;
+    text-align: center;
+    font-style: italic;
+}
+
+.value-display {
+    background: linear-gradient(45deg, var(--primary-blue), var(--primary-blue-dark));
+    color: white;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-weight: 600;
+    min-width: 60px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+}
+
+.unit-label {
+    color: var(--text-muted);
+    font-weight: 500;
+}

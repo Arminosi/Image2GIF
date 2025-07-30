@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎨 PNG转GIF动画制作工具 v2.0</title>
+    
+    <!-- CSS样式文件 -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/file-list.css">
+    <link rel="stylesheet" href="css/form-controls.css">
+    <link rel="stylesheet" href="css/history-window.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                <span class="title-icon">🎨</span>
+                <span class="title-text">PNG转GIF动画制作工具</span>
+                <span class="title-version">v2.0</span>
+            </h1>
+        </div>
+        
+        <div class="upload-area">
+            <p>选择多个PNG文件（将按文件名排序）:</p>
+            <input type="file" id="file-input" accept=".png" multiple>
+            <button class="upload-btn" onclick="document.getElementById('file-input').click()">选择PNG文件</button>
+            
+            <!-- 卡片大小控制器 -->
+            <div class="card-size-control" id="card-size-control" style="display: none;">
+                <label for="card-size-slider">🔍 卡片大小:</label>
+                <div class="form-control-row">
+                    <input type="range" id="card-size-slider" min="100" max="250" value="150" step="10" class="custom-slider">
+                    <span id="card-size-value" class="value-display">150</span>
+                    <span class="unit-label">px</span>
+                </div>
+                <p class="form-help-text">拖动滑块调整文件卡片的显示大小</p>
+            </div>
+            
+            <div id="file-list" class="file-list"></div>
+        </div>
+        
+        <div class="form-group">
+            <h3>🎬 动画设置</h3>
+            
+            <div class="form-group">
+                <label for="frame-delay">⏱️ 帧间隔 (毫秒):</label>
+                <div class="form-control-row">
+                    <input type="range" id="frame-delay" min="50" max="1000" value="100" step="10" class="custom-slider">
+                    <span id="delay-value" class="value-display">100</span>
+                    <span class="unit-label">ms</span>
+                </div>
+                <div class="form-control-row" style="margin-top: 10px;">
+                    <button type="button" id="apply-delay-all" class="control-btn">应用到所有帧</button>
+                    <button type="button" id="reset-delays" class="control-btn">重置所有帧</button>
+                </div>
+                <p class="form-help-text">较小的值=更快的动画，较大的值=更慢的动画。每帧可单独设置时间间隔。</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="background-color">🎨 背景颜色:</label>
+                <div class="form-control-group">
+                    <label>
+                        <input type="radio" id="bg-transparent" name="background" value="transparent" checked>
+                        <span>透明</span>
+                    </label>
+                    
+                    <label>
+                        <input type="radio" id="bg-white" name="background" value="#FFFFFF">
+                        <span>白色</span>
+                    </label>
+                    
+                    <label>
+                        <input type="radio" id="bg-black" name="background" value="#000000">
+                        <span>黑色</span>
+                    </label>
+                    
+                    <label>
+                        <input type="radio" id="bg-custom" name="background" value="custom">
+                        <span>自定义:</span>
+                        <input type="color" id="custom-color" value="#FF0000">
+                    </label>
+                </div>
+                <p class="form-help-text">选择GIF的背景颜色（透明区域将显示此颜色）</p>
+            </div>
+        </div>
+        
+        <div class="button-group">
+            <button id="generate-btn" class="generate-btn" disabled>
+                🎬 生成GIF动画
+            </button>
+            <button id="open-history-btn" class="history-btn" title="查看生成历史">
+                📱 历史记录
+            </button>
+        </div>
+        
+        <div id="progress-container" class="progress-container">
+            <div id="progress-bar" class="progress-bar">0%</div>
+        </div>
+        
+        <div class="preview-area">
+            <div id="gif-preview-container" style="display:none; flex-direction:column; align-items:center; width:100%;">
+                <div style="position:relative; display:inline-block;">
+                    <img id="preview-gif" class="preview-gif" style="display:block; max-width:420px; max-height:320px; background:linear-gradient(45deg,#00000022 25%,transparent 25%),linear-gradient(-45deg,#00000022 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#00000022 75%),linear-gradient(-45deg,transparent 75%,#00000022 75%);background-size:20px 20px;background-position:0 0,0 10px,10px -10px,-10px 0px; border-radius:15px; box-shadow:0 10px 30px rgba(0,0,0,0.2);">
+                    <button id="close-preview-btn" title="关闭预览" style="position:absolute;top:8px;right:8px;background:rgba(255,255,255,0.85);border:none;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);font-size:18px;color:#333;transition:background 0.2s;z-index:2;">
+                        ✖
+                    </button>
+                </div>
+                <div style="margin-top:18px;display:flex;gap:18px;align-items:center;justify-content:center;">
+                    <a id="download-link" href="#" download="output.gif" style="display:inline-block;text-decoration:none;">
+                        <button class="generate-btn" style="background: linear-gradient(45deg, #4CAF50, #45a049); padding: 13px 28px; font-size: 17px; font-weight: 600; box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4); border-radius: 30px;">
+                            📥 下载GIF
+                        </button>
+                    </a>
+                    <button id="copy-gif-btn" class="generate-btn" style="background:linear-gradient(45deg,#FF9800,#F44336);padding:13px 28px;font-size:17px;font-weight:600;box-shadow:0 6px 20px rgba(255,152,0,0.25);border-radius:30px;display:inline-block;">
+                        📋 复制GIF
+                    </button>
+                </div>
+                <div id="gif-size-info" style="margin-top:10px;font-size:13px;color:#666;text-align:center;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 右键菜单 -->
+    <div id="context-menu" class="context-menu">
+        <div class="context-menu-item" id="context-copy">
+            <span>📋</span>
+            <span>复制选中的帧</span>
+        </div>
+        <div class="context-menu-item" id="context-paste">
+            <span>📌</span>
+            <span>粘贴帧到此位置</span>
+        </div>
+        <div class="context-menu-item" id="context-delete">
+            <span>🗑️</span>
+            <span>删除选中的帧</span>
+        </div>
+        <div class="context-menu-item" id="context-set-delay">
+            <span>⏱️</span>
+            <span>设置选中帧时长</span>
+        </div>
+    </div>
+
+    <!-- 对话框背景遮罩 -->
+    <div id="delay-dialog-overlay" class="delay-dialog-overlay"></div>
+    <div id="delete-dialog-overlay" class="delay-dialog-overlay"></div>
+
+    <!-- 悬浮时长设置对话框 -->
+    <div id="delay-dialog" class="delay-dialog">
+        <div class="delay-dialog-header">
+            <div class="delay-dialog-close" id="delay-dialog-close">✖</div>
+            <h3>⏱️ 批量设置帧时长</h3>
+        </div>
+        <div class="delay-dialog-content">
+            <div class="delay-input-group">
+                <label for="batch-delay-input">持续时长</label>
+                <div class="delay-input-wrapper">
+                    <input type="number" id="batch-delay-input" min="50" max="2000" step="10" value="100" placeholder="输入毫秒数">
+                    <span class="delay-input-suffix">ms</span>
+                </div>
+            </div>
+            <div class="delay-dialog-buttons">
+                <button id="delay-cancel-btn" class="control-btn">取消</button>
+                <button id="delay-confirm-btn" class="control-btn">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 悬浮删除确认对话框 -->
+    <div id="delete-dialog" class="delay-dialog">
+        <div class="delay-dialog-header">
+            <div class="delay-dialog-close" id="delete-dialog-close">✖</div>
+            <h3>🗑️ 删除选中帧</h3>
+        </div>
+        <div class="delay-dialog-content">
+            <div class="delete-confirmation-message">
+                <div class="delete-icon">⚠️</div>
+                <p id="delete-message">确定要删除选中的 <span id="delete-count">0</span> 个帧吗？</p>
+                <p class="delete-warning">此操作不可撤销！</p>
+            </div>
+            <div class="delay-dialog-buttons">
+                <button id="delete-cancel-btn" class="control-btn">取消</button>
+                <button id="delete-confirm-btn" class="control-btn delete-btn">删除</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 右上角悬浮状态提示系统 -->
+    <div id="floating-status-container" class="floating-status-container"></div>
+
+    <!-- JavaScript库和模块 -->
+    <script src="https://unpkg.com/gif.js@0.2.0/dist/gif.js"></script>
+    
+    <!-- 应用程序模块 -->
+    <script src="js/core.js"></script>
+    <script src="js/floating-status.js"></script>
+    <script src="js/history-manager.js"></script>
+    <script src="js/file-manager.js"></script>
+    <script src="js/context-menu.js"></script>
+    <script src="js/card-size-controller.js"></script>
+    <script src="js/drag-sort-controller.js"></script>
+    <script src="js/keyboard-shortcuts.js"></script>
+    <script src="js/gif-generator.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
