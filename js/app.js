@@ -5,7 +5,7 @@
 
 // 应用程序初始化
 function initializeApp() {
-    console.log('初始化PNG转GIF应用程序...');
+    console.log('初始化图片转GIF应用程序...');
     
     // 初始化各个模块
     try {

@@ -44,7 +44,7 @@ function displayFileList() {
         emptyState.innerHTML = `
             <div class="empty-state-icon">📁</div>
             <div class="empty-state-text">还没有选择文件</div>
-            <div class="empty-state-hint">请点击"选择PNG文件"按钮导入图片</div>
+            <div class="empty-state-hint">请点击"选择图片文件"按钮导入图片</div>
         `;
         fileListElement.appendChild(emptyState);
         return;
@@ -97,7 +97,7 @@ function displayFileList() {
     appendImportBtn.innerHTML = '➕ 追加图片';
     appendImportBtn.onclick = appendImportFiles;
     appendImportBtn.id = 'append-import-btn';
-    appendImportBtn.title = '追加导入PNG图片到当前序列';
+    appendImportBtn.title = '追加导入图片到当前序列（支持PNG、JPG、WebP）';
     
     const selectionInfo = document.createElement('div');
     selectionInfo.className = 'selection-info';
@@ -515,12 +515,12 @@ function undoLastOperation() {
     }
 }
 
-// 追加导入PNG文件
+// 追加导入图片文件
 function appendImportFiles() {
     // 创建隐藏的文件输入元素
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
-    fileInput.accept = '.png';
+    fileInput.accept = '.png,.jpg,.jpeg,.webp';
     fileInput.multiple = true;
     fileInput.style.display = 'none';
     
@@ -529,9 +529,14 @@ function appendImportFiles() {
         const files = Array.from(e.target.files);
         if (files.length > 0) {
             // 检查文件类型
-            const invalidFiles = files.filter(file => !file.type.includes('png'));
+            const invalidFiles = files.filter(file => 
+                !file.type.includes('png') && 
+                !file.type.includes('jpeg') && 
+                !file.type.includes('jpg') && 
+                !file.type.includes('webp')
+            );
             if (invalidFiles.length > 0) {
-                alert(`检测到 ${invalidFiles.length} 个非PNG文件，仅支持PNG格式！`);
+                alert(`检测到 ${invalidFiles.length} 个不支持的文件格式！仅支持PNG、JPG、WebP格式。`);
                 document.body.removeChild(fileInput);
                 return;
             }
@@ -559,7 +564,7 @@ function appendImportFiles() {
             // 显示成功消息
             const statusElement = document.getElementById('status');
             if (statusElement) {
-                statusElement.textContent = `✅ 成功追加导入 ${files.length} 个PNG文件！`;
+                statusElement.textContent = `✅ 成功追加导入 ${files.length} 个图片文件！`;
                 statusElement.style.color = '#4CAF50';
                 
                 // 3秒后清除状态
@@ -568,7 +573,7 @@ function appendImportFiles() {
                 }, 3000);
             }
             
-            console.log(`追加导入了 ${files.length} 个PNG文件`);
+            console.log(`追加导入了 ${files.length} 个图片文件`);
         }
         
         // 清理输入元素
