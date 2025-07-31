@@ -1,4 +1,7 @@
+# 中文 | [ENG](README_EN.md)
 # 图片序列转GIF动画制作工具
+
+
 
 - 直接使用：https://arminosi.github.io/Image2GIF/
 
