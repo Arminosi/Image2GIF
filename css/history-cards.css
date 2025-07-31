@@ -1,0 +1,21 @@
+/**
+ * 历史记录卡片样式 - SpriteSlice风格
+ * @description 简洁现代的历史记录卡片样式
+ */
+
+/* 历史记录窗口的样式已在history-window-v3.css中定义，此文件保持简化以避免冲突 */
+
+/* 如果需要自定义历史记录卡片样式，请在这里添加，但要确保与新的设计系统一致 */
+
+.history-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.history-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
