@@ -81,20 +81,20 @@ class HistoryManagerV3 {
         overlay.innerHTML = `
             <div class="history-window" id="history-window">
                 <div class="history-header">
-                    <h3 class="history-title">历史记录</h3>
+                    <h3 class="history-title" data-i18n="history.title">历史记录</h3>
                     
                     <div class="header-controls">
-                        <button class="clear-all-btn" id="clear-all-btn" title="清空所有历史记录">
-                            🗑️ 清空全部
+                        <button class="clear-all-btn" id="clear-all-btn" data-i18n-title="history.clear.tooltip">
+                            <span data-i18n="history.clear.button">🗑️ 清空全部</span>
                         </button>
                         
                         <div class="pagination-controls" id="pagination-controls">
-                            <button class="page-nav-btn" id="first-page-btn" title="首页">⏮</button>
-                            <button class="page-nav-btn" id="prev-page-btn" title="上一页">◀</button>
+                            <button class="page-nav-btn" id="first-page-btn" data-i18n-title="history.pagination.first">⏮</button>
+                            <button class="page-nav-btn" id="prev-page-btn" data-i18n-title="history.pagination.prev">◀</button>
                             <input type="number" class="page-input" id="page-input" min="1" placeholder="1">
                             <span class="page-info" id="page-info">/ 1</span>
-                            <button class="page-nav-btn" id="next-page-btn" title="下一页">▶</button>
-                            <button class="page-nav-btn" id="last-page-btn" title="末页">⏭</button>
+                            <button class="page-nav-btn" id="next-page-btn" data-i18n-title="history.pagination.next">▶</button>
+                            <button class="page-nav-btn" id="last-page-btn" data-i18n-title="history.pagination.last">⏭</button>
                         </div>
                     </div>
                     
@@ -130,6 +130,11 @@ class HistoryManagerV3 {
         `;
 
         document.body.appendChild(overlay);
+        
+        // 应用国际化
+        if (window.i18n) {
+            window.i18n.applyToContainer(overlay);
+        }
     }
 
     /**
@@ -265,9 +270,13 @@ class HistoryManagerV3 {
             cardsGrid.innerHTML = `
                 <div class="empty-state" style="grid-column: 1 / -1;">
                     <div class="empty-icon">📭</div>
-                    <p class="empty-text">暂无历史记录</p>
+                    <p class="empty-text" data-i18n="history.empty">暂无历史记录</p>
                 </div>
             `;
+            // 应用国际化到空状态
+            if (window.i18n) {
+                window.i18n.applyToContainer(cardsGrid);
+            }
             return;
         }
 
@@ -292,10 +301,20 @@ class HistoryManagerV3 {
         card.style.animationDelay = `${(index % this.itemsPerPage) * 0.05}s`;
 
         // 确保数据完整性
-        const filename = item.filename || `未命名文件_${item.id || Date.now()}`;
+        const filename = item.filename || (window.i18n ? window.i18n.t('history.card.unnamed') : `未命名文件_${item.id || Date.now()}`);
         const createTime = new Date(item.timestamp || Date.now()).toLocaleString();
         const fileSize = this.formatSize(item.size || 0);
         const delay = item.delay || 100;
+        
+        // 处理帧数显示
+        let framesDisplay = '';
+        if (item.sequenceFrames && item.sequenceFrames.length > 0) {
+            if (window.i18n && window.i18n.getCurrentLanguage() === 'en') {
+                framesDisplay = `<span class="info-tag">🎞️ ${item.sequenceFrames.length} frames</span>`;
+            } else {
+                framesDisplay = `<span class="info-tag">🎞️ ${item.sequenceFrames.length}帧</span>`;
+            }
+        }
 
         card.innerHTML = `
             <div class="card-header">
@@ -308,31 +327,33 @@ class HistoryManagerV3 {
                     <span class="info-tag">📅 ${createTime}</span>
                     <span class="info-tag">📦 ${fileSize}</span>
                     <span class="info-tag">⏱️ ${delay}ms</span>
-                    ${item.sequenceFrames && item.sequenceFrames.length > 0 ? 
-                        `<span class="info-tag">🎞️ ${item.sequenceFrames.length}帧</span>` : 
-                        ''
-                    }
+                    ${framesDisplay}
                 </div>
             </div>
             
             <div class="card-footer">
-                <button class="card-btn btn-preview" data-action="preview" data-index="${index}">
+                <button class="card-btn btn-preview" data-action="preview" data-index="${index}" data-i18n="history.card.preview">
                     👁️ 预览
                 </button>
-                <button class="card-btn btn-download" data-action="download" data-index="${index}">
+                <button class="card-btn btn-download" data-action="download" data-index="${index}" data-i18n="history.card.download">
                     💾 下载
                 </button>
                 ${item.sequenceFrames && item.sequenceFrames.length > 0 ? 
-                    `<button class="card-btn btn-import" data-action="import" data-index="${index}" title="导入 ${item.sequenceFrames.length} 个序列帧">
+                    `<button class="card-btn btn-import" data-action="import" data-index="${index}" data-i18n="history.card.import" title="${window.i18n && window.i18n.getCurrentLanguage() === 'en' ? `Import ${item.sequenceFrames.length} sequence frames` : `导入 ${item.sequenceFrames.length} 个序列帧`}">
                         📥 导入
                     </button>` : 
                     ''
                 }
-                <button class="card-btn btn-delete" data-action="delete" data-index="${index}">
+                <button class="card-btn btn-delete" data-action="delete" data-index="${index}" data-i18n="history.card.delete">
                     🗑️ 删除
                 </button>
             </div>
         `;
+
+        // 应用国际化
+        if (window.i18n) {
+            window.i18n.applyToContainer(card);
+        }
 
         // 绑定卡片事件
         card.addEventListener('click', (e) => {
@@ -412,7 +433,8 @@ class HistoryManagerV3 {
         
         // 显示下载成功消息
         if (window.FloatingStatus) {
-            FloatingStatus.show(`已下载: ${filename}`, 'success', 2000);
+            const message = window.i18n ? window.i18n.t('status.downloaded') : '已下载:';
+            FloatingStatus.show(`${message} ${filename}`, 'success', 2000);
         }
     }
 
@@ -438,7 +460,8 @@ class HistoryManagerV3 {
             this.updatePaginationControls();
             
             if (window.FloatingStatus) {
-                FloatingStatus.show(`已删除: ${filename}`, 'success', 2000);
+                const message = window.i18n ? window.i18n.t('status.deleted') : '已删除:';
+                FloatingStatus.show(`${message} ${filename}`, 'success', 2000);
             }
         }
     }
@@ -542,9 +565,11 @@ class HistoryManagerV3 {
     async importSequence(item) {
         if (!item.sequenceFrames || item.sequenceFrames.length === 0) {
             if (window.FloatingStatus) {
-                FloatingStatus.show('该历史记录没有保存序列帧数据', 'warning', 3000);
+                const message = window.i18n ? window.i18n.t('status.no_frame_data') : '该历史记录没有保存序列帧数据';
+                FloatingStatus.show(message, 'warning', 3000);
             } else {
-                alert('该历史记录没有保存序列帧数据');
+                const message = window.i18n ? window.i18n.t('status.no_frame_data') : '该历史记录没有保存序列帧数据';
+                alert(message);
             }
             return;
         }
@@ -632,14 +657,17 @@ class HistoryManagerV3 {
             this.closeWindow();
 
             if (window.FloatingStatus) {
-                FloatingStatus.show(`成功导入 ${files.length} 个序列帧`, 'success', 3000);
+                const message = window.i18n ? window.i18n.t('status.import_success', { count: files.length }) : `成功导入 ${files.length} 个序列帧`;
+                FloatingStatus.show(message, 'success', 3000);
             }
         } catch (error) {
             console.error('导入序列帧失败:', error);
             if (window.FloatingStatus) {
-                FloatingStatus.show('导入序列帧失败: ' + error.message, 'error', 3000);
+                const errorMessage = window.i18n ? window.i18n.t('status.import_failed') : '导入序列帧失败:';
+                FloatingStatus.show(`${errorMessage} ${error.message}`, 'error', 3000);
             } else {
-                alert('导入序列帧失败: ' + error.message);
+                const errorMessage = window.i18n ? window.i18n.t('status.import_failed') : '导入序列帧失败:';
+                alert(`${errorMessage} ${error.message}`);
             }
         }
     }
@@ -676,9 +704,11 @@ class HistoryManagerV3 {
     clearAllHistory() {
         if (this.historyData.length === 0) {
             if (window.FloatingStatus) {
-                FloatingStatus.show('没有历史记录需要清空', 'info', 2000);
+                const message = window.i18n ? window.i18n.t('status.no_history_to_clear') : '没有历史记录需要清空';
+                FloatingStatus.show(message, 'info', 2000);
             } else {
-                alert('没有历史记录需要清空');
+                const message = window.i18n ? window.i18n.t('status.no_history_to_clear') : '没有历史记录需要清空';
+                alert(message);
             }
             return;
         }
@@ -695,9 +725,11 @@ class HistoryManagerV3 {
             this.updatePaginationControls();
             
             if (window.FloatingStatus) {
-                FloatingStatus.show(`已清空 ${totalCount} 个历史记录`, 'success', 3000);
+                const message = window.i18n ? window.i18n.t('status.history_cleared', { count: totalCount }) : `已清空 ${totalCount} 个历史记录`;
+                FloatingStatus.show(message, 'success', 3000);
             } else {
-                alert(`已清空 ${totalCount} 个历史记录`);
+                const message = window.i18n ? window.i18n.t('status.history_cleared', { count: totalCount }) : `已清空 ${totalCount} 个历史记录`;
+                alert(message);
             }
         }
     }

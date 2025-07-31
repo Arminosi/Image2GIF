@@ -38,15 +38,28 @@ function displayFileList() {
             CardSizeController.hide();
         }
         
-        // 显示空状态提示
-        const emptyState = document.createElement('div');
-        emptyState.className = 'empty-state';
-        emptyState.innerHTML = `
-            <div class="empty-state-icon">📁</div>
-            <div class="empty-state-text">还没有选择文件</div>
-            <div class="empty-state-hint">请点击"选择图片文件"按钮导入图片</div>
-        `;
-        fileListElement.appendChild(emptyState);
+        // 创建空状态提示
+        const emptyDiv = document.createElement('div');
+        emptyDiv.className = 'file-list-empty-message';
+        
+        // 根据当前语言显示不同内容
+        const isEnglish = window.i18n && window.i18n.getCurrentLanguage() === 'en';
+        
+        if (isEnglish) {
+            emptyDiv.innerHTML = `
+                <div class="icon">🎬</div>
+                <div class="title">No frame sequence yet</div>
+                <div class="hint">Click "Select Image Files" button on the left to start</div>
+            `;
+        } else {
+            emptyDiv.innerHTML = `
+                <div class="icon">🎬</div>
+                <div class="title">还没有帧序列</div>
+                <div class="hint">点击左侧"选择PNG文件"按钮开始</div>
+            `;
+        }
+        
+        fileListElement.appendChild(emptyDiv);
         return;
     }
     
@@ -59,12 +72,17 @@ function displayFileList() {
     const header = document.createElement('div');
     header.className = 'file-list-header';
     header.innerHTML = `
-        <div>📁 已导入的帧</div>
-        <div style="font-size: 14px; font-weight: 400; margin-top: 5px; opacity: 0.9;">
+        <div data-i18n="frame.header.title">📁 已导入的帧</div>
+        <div style="font-size: 14px; font-weight: 400; margin-top: 5px; opacity: 0.9;" data-i18n="frame.header.hint">
           可以拖拽排序 • Ctrl+C/V 复制粘贴
         </div>
     `;
     fileListElement.appendChild(header);
+    
+    // 应用国际化到标题
+    if (window.i18n) {
+        window.i18n.applyToContainer(header);
+    }
     
     // 添加控制按钮
     const controls = document.createElement('div');
@@ -72,32 +90,32 @@ function displayFileList() {
     
     const selectAllBtn = document.createElement('button');
     selectAllBtn.className = 'control-btn';
-    selectAllBtn.innerHTML = '🔲 全选';
+    selectAllBtn.innerHTML = '<span data-i18n="frame.controls.selectAll">🔲 全选</span>';
     selectAllBtn.onclick = selectAll;
     
     const deselectAllBtn = document.createElement('button');
     deselectAllBtn.className = 'control-btn';
-    deselectAllBtn.innerHTML = '⭕ 取消全选';
+    deselectAllBtn.innerHTML = '<span data-i18n="frame.controls.deselectAll">⭕ 取消全选</span>';
     deselectAllBtn.onclick = deselectAll;
     
     const copySelectedBtn = document.createElement('button');
     copySelectedBtn.className = 'control-btn';
-    copySelectedBtn.innerHTML = '📋 复制选中';
+    copySelectedBtn.innerHTML = '<span data-i18n="frame.controls.copy">📋 复制选中</span>';
     copySelectedBtn.onclick = copySelected;
     copySelectedBtn.id = 'copy-selected-btn';
     
     const deleteSelectedBtn = document.createElement('button');
     deleteSelectedBtn.className = 'control-btn';
-    deleteSelectedBtn.innerHTML = '🗑️ 删除选中';
+    deleteSelectedBtn.innerHTML = '<span data-i18n="frame.controls.delete">🗑️ 删除选中</span>';
     deleteSelectedBtn.onclick = deleteSelected;
     deleteSelectedBtn.id = 'delete-selected-btn';
     
     const appendImportBtn = document.createElement('button');
     appendImportBtn.className = 'control-btn';
-    appendImportBtn.innerHTML = '➕ 追加图片';
+    appendImportBtn.innerHTML = '<span data-i18n="frame.controls.append">➕ 追加图片</span>';
     appendImportBtn.onclick = appendImportFiles;
     appendImportBtn.id = 'append-import-btn';
-    appendImportBtn.title = '追加导入图片到当前序列（支持PNG、JPG、WebP）';
+    appendImportBtn.setAttribute('data-i18n-title', 'frame.controls.append.tooltip');
     
     const selectionInfo = document.createElement('div');
     selectionInfo.className = 'selection-info';
@@ -111,6 +129,11 @@ function displayFileList() {
     controls.appendChild(selectionInfo);
     
     fileListElement.appendChild(controls);
+    
+    // 应用国际化到控制按钮
+    if (window.i18n) {
+        window.i18n.applyToContainer(controls);
+    }
     
     // 创建文件网格容器
     const gridContainer = document.createElement('div');
@@ -348,7 +371,8 @@ function copySelected() {
         displayFileList();
         AppCore.notifyStateUpdate();
     } else {
-        alert('请先选择要复制的帧！');
+        const message = window.i18n ? window.i18n.t('status.select_frames_first') : '请先选择要复制的帧！';
+        alert(message);
     }
 }
 
@@ -398,15 +422,32 @@ function updateSelectionInfo() {
         const totalCount = AppCore.appState.selectedFiles.length;
         
         if (selectedCount === 0) {
-            infoElement.innerHTML = `
-                <span style="color: #666;">📊 总共 ${totalCount} 个文件</span>
-                <span style="color: #999; margin-left: 10px;">未选择任何文件</span>
-            `;
+            if (window.i18n && window.i18n.getCurrentLanguage() === 'en') {
+                const fileText = totalCount === 1 ? 'file' : 'files';
+                infoElement.innerHTML = `
+                    <span style="color: #666;">📊 Total ${totalCount} ${fileText}</span>
+                    <span style="color: #999; margin-left: 10px;">No files selected</span>
+                `;
+            } else {
+                infoElement.innerHTML = `
+                    <span style="color: #666;">📊 总共 ${totalCount} 个文件</span>
+                    <span style="color: #999; margin-left: 10px;">未选择任何文件</span>
+                `;
+            }
         } else {
-            infoElement.innerHTML = `
-                <span style="color: #667eea; font-weight: 700;">✅ 已选择 ${selectedCount} 个文件</span>
-                <span style="color: #666; margin-left: 10px;">总共 ${totalCount} 个文件</span>
-            `;
+            if (window.i18n && window.i18n.getCurrentLanguage() === 'en') {
+                const selectedFileText = selectedCount === 1 ? 'file' : 'files';
+                const totalFileText = totalCount === 1 ? 'file' : 'files';
+                infoElement.innerHTML = `
+                    <span style="color: #667eea; font-weight: 700;">✅ ${selectedCount} ${selectedFileText} selected</span>
+                    <span style="color: #666; margin-left: 10px;">Total ${totalCount} ${totalFileText}</span>
+                `;
+            } else {
+                infoElement.innerHTML = `
+                    <span style="color: #667eea; font-weight: 700;">✅ 已选择 ${selectedCount} 个文件</span>
+                    <span style="color: #666; margin-left: 10px;">总共 ${totalCount} 个文件</span>
+                `;
+            }
         }
     }
     

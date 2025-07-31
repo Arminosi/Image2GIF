@@ -25,6 +25,12 @@ function initializeApp() {
         initializeHistoryButton();
         console.log('✓ 历史记录管理器已初始化');
         
+        // 初始显示空的文件列表状态
+        if (window.FileManager && window.FileManager.displayFileList) {
+            window.FileManager.displayFileList();
+            console.log('✓ 文件列表初始状态已显示');
+        }
+        
         console.log('✓ 应用程序初始化完成');
     } catch (error) {
         console.error('应用程序初始化失败:', error);
@@ -41,7 +47,8 @@ function initializeHistoryButton() {
             if (window.HistoryManagerV3) {
                 window.HistoryManagerV3.openWindow();
             } else {
-                FloatingStatus.error('历史记录管理器未加载', 3000);
+                const message = window.i18n ? window.i18n.t('status.history_manager_not_loaded') : '历史记录管理器未加载';
+                FloatingStatus.error(message, 3000);
             }
         });
     }

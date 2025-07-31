@@ -98,6 +98,10 @@ body {
     color: var(--text-white) !important;
     padding: var(--spacing-xl) !important;
     text-align: center !important;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 h1 {
@@ -128,6 +132,53 @@ h1 {
     font-size: 1rem !important;
     font-weight: 600 !important;
     color: var(--text-white) !important;
+}
+
+/* ================================
+   语言切换
+   ================================ */
+.language-switch {
+    position: absolute;
+    right: var(--spacing-xl);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    background: rgba(255, 255, 255, 0.1);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius);
+    backdrop-filter: blur(10px);
+}
+
+.lang-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+    min-width: 40px;
+}
+
+.lang-btn:hover {
+    color: var(--text-white);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.lang-btn.active {
+    color: var(--text-white);
+    background: rgba(255, 255, 255, 0.2);
+    font-weight: 600;
+}
+
+.lang-separator {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+    user-select: none;
 }
 
 /* ================================

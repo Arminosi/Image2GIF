@@ -19,7 +19,10 @@ function getSelectedBackgroundColor() {
 function generateGIF() {
     // 检查是否有选中的文件
     if (AppCore.appState.selectedFiles.length === 0) {
-        FloatingStatus.warning('请先选择PNG图片文件！');
+        console.log('当前语言:', window.i18n ? window.i18n.getCurrentLanguage() : 'i18n未加载');
+        const message = window.i18n ? window.i18n.t('status.select_images_first') : '请先选择PNG图片文件！';
+        console.log('显示消息:', message);
+        FloatingStatus.warning(message);
         return;
     }
     
@@ -40,7 +43,8 @@ function generateGIF() {
     statusElement.style.color = '#666';
     
     // 使用悬浮状态显示进度
-    const progressMessageId = FloatingStatus.progress('正在处理帧:', 0, AppCore.appState.selectedFiles.length);
+    const progressMessage = window.i18n ? window.i18n.t('status.processing_frames') : '正在处理帧:';
+    const progressMessageId = FloatingStatus.progress(progressMessage, 0, AppCore.appState.selectedFiles.length);
     
     // 处理期间禁用生成按钮并更改文本
     generateBtn.disabled = true;
@@ -134,7 +138,8 @@ function processFrames(index, total, width, height, gif, statusElement, progress
         }, 3000);
         
         // 显示错误消息
-        FloatingStatus.error(`加载图片出错: ${file.name}`, 5000);
+        const errorMessage = window.i18n ? window.i18n.t('status.image_load_error') : '加载图片出错:';
+        FloatingStatus.error(`${errorMessage} ${file.name}`, 5000);
         
         // 重置界面状态（错误状态）
         resetGenerationState(statusElement, progressContainer, progressBar, true);
@@ -150,7 +155,8 @@ function updateProgress(current, total, statusElement, progressContainer, progre
     progressBar.textContent = `${percent}%`;
     
     // 使用悬浮状态更新进度，不再更新 statusElement 避免刷屏
-    FloatingStatus.progress('正在处理帧:', current, total, progressMessageId);
+    const progressMessage = window.i18n ? window.i18n.t('status.processing_frames') : '正在处理帧:';
+    FloatingStatus.progress(progressMessage, current, total, progressMessageId);
 }
 
 // 完成GIF创建
@@ -326,7 +332,8 @@ function finishGif(gif, statusElement, progressContainer, progressBar, progressM
             }
             
             // 显示成功消息
-            FloatingStatus.success('GIF动画创建完成！', 3000);
+            const successMessage = window.i18n ? window.i18n.t('status.gif_creation_complete') : 'GIF动画创建完成！';
+            FloatingStatus.success(successMessage, 3000);
         }, 100); // 稍微延迟确保DOM更新完成
     });
     
@@ -336,7 +343,8 @@ function finishGif(gif, statusElement, progressContainer, progressBar, progressM
         if (progressMessageId) {
             FloatingStatus.hide(progressMessageId);
         }
-        FloatingStatus.error('GIF生成被中止', 3000);
+        const abortMessage = window.i18n ? window.i18n.t('status.gif_generation_aborted') : 'GIF生成被中止';
+        FloatingStatus.error(abortMessage, 3000);
         resetGenerationState(statusElement, progressContainer, progressBar, true);
     });
     

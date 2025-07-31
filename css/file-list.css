@@ -612,19 +612,33 @@
     padding: 0 var(--spacing-xs); /* 添加小的内边距避免滚动条贴边 */
 }
 
-.right-panel .file-list:empty::after {
-    content: '🎬\A还没有帧序列\A点击左侧"选择PNG文件"按钮开始';
-    white-space: pre-line;
+/* 简单的空状态提示 */
+.file-list-empty-message {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: var(--spacing-xl);
-    color: var(--text-secondary);
     text-align: center;
-    font-size: 0.9rem;
-    line-height: 1.6;
-    height: 200px;
+    padding: 40px 20px;
+    min-height: 200px;
+    color: #666;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.file-list-empty-message .icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+}
+
+.file-list-empty-message .title {
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #333;
+}
+
+.file-list-empty-message .hint {
+    opacity: 0.8;
 }
 
 /* 右侧面板中的文件网格调整 */

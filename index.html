@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎨 图片序列转GIF动画制作工具 v3</title>
+    <title>🎨 Image2GIF v3.3</title>
     
     <!-- CSS样式文件 -->
     <link rel="stylesheet" href="css/main.css">
@@ -17,9 +17,14 @@
         <div class="header">
             <h1>
                 <span class="title-icon">🎨</span>
-                <span class="title-text">图片序列转GIF动画制作工具</span>
-                <span class="title-version">v3.2</span>
+                <span class="title-text" data-i18n="title">Image2GIF</span>
+                <span class="title-version" data-i18n="app.version">v3.3</span>
             </h1>
+            <div class="language-switch">
+                <button class="lang-btn active" data-lang="zh" title="中文">中文</button>
+                <span class="lang-separator">|</span>
+                <button class="lang-btn" data-lang="en" title="English">ENG</button>
+            </div>
         </div>
         
         <div class="main-content">
@@ -28,66 +33,66 @@
                 <div class="left-panel">
                     <!-- 步骤1：选择文件 -->
                     <div class="section upload-area">
-                        <h3>📁 步骤 1: 选择图片文件</h3>
-                        <p>选择多个图片文件，支持PNG、JPG、WebP格式，将按文件名自动排序生成动画帧</p>
+                        <h3 data-i18n="step1_title">📁 步骤 1: 选择图片文件</h3>
+                        <p data-i18n="step1_desc">选择多个图片文件，支持PNG、JPG、WebP格式，将按文件名自动排序生成动画帧</p>
                         <input type="file" id="file-input" accept=".png,.jpg,.jpeg,.webp" multiple>
                         <button class="btn btn-primary btn-large upload-btn" onclick="document.getElementById('file-input').click()">
-                            📁 选择图片文件
+                            <span data-i18n="select_files_btn">📁 选择图片文件</span>
                         </button>
                     </div>
                     
                     <!-- 步骤2：动画设置 -->
                     <div class="section">
-                        <h3>🎬 步骤 2: 动画设置</h3>
+                        <h3 data-i18n="step2_title">🎬 步骤 2: 动画设置</h3>
                         
                         <div class="form-row">
-                            <label for="frame-delay">⏱️ 帧间隔 (毫秒):</label>
+                            <label for="frame-delay" data-i18n="frame_delay_label">⏱️ 帧间隔 (毫秒):</label>
                             <div class="form-control-row">
                                 <input type="range" id="frame-delay" min="50" max="1000" value="100" step="10" class="range-input custom-slider">
                                 <span id="delay-value" class="range-value value-display">100</span>
                                 <span class="unit-label">ms</span>
                             </div>
                             <div class="form-control-row button-row" style="margin-top: 10px;">
-                                <button type="button" id="apply-delay-all" class="btn btn-secondary control-btn">应用到所有帧</button>
-                                <button type="button" id="reset-delays" class="btn btn-secondary control-btn">重置所有帧</button>
+                                <button type="button" id="apply-delay-all" class="btn btn-secondary control-btn" data-i18n="apply_to_all">应用到所有帧</button>
+                                <button type="button" id="reset-delays" class="btn btn-secondary control-btn" data-i18n="reset_all">重置所有帧</button>
                             </div>
-                            <p class="help-text form-help-text">较小的值=更快的动画，较大的值=更慢的动画。每帧可单独设置时间间隔。</p>
+                            <p class="help-text form-help-text" data-i18n="frame_delay_help">较小的值=更快的动画，较大的值=更慢的动画。每帧可单独设置时间间隔。</p>
                         </div>
                         
                         <div class="form-row">
-                            <label>🎨 背景颜色:</label>
+                            <label data-i18n="bg_color_label">🎨 背景颜色:</label>
                             <div class="form-control-group radio-group">
                                 <label class="radio-item">
                                     <input type="radio" id="bg-transparent" name="background" value="transparent" checked>
-                                    <span class="radio-label">透明</span>
+                                    <span class="radio-label" data-i18n="bg_transparent">透明</span>
                                 </label>
                                 <label class="radio-item">
                                     <input type="radio" id="bg-white" name="background" value="#FFFFFF">
-                                    <span class="radio-label">白色</span>
+                                    <span class="radio-label" data-i18n="bg_white">白色</span>
                                 </label>
                                 <label class="radio-item">
                                     <input type="radio" id="bg-black" name="background" value="#000000">
-                                    <span class="radio-label">黑色</span>
+                                    <span class="radio-label" data-i18n="bg_black">黑色</span>
                                 </label>
                                 <label class="radio-item">
                                     <input type="radio" id="bg-custom" name="background" value="custom">
-                                    <span class="radio-label">自定义:</span>
+                                    <span class="radio-label" data-i18n="bg_custom">自定义:</span>
                                     <input type="color" id="custom-color" value="#FF0000" class="color-input">
                                 </label>
                             </div>
-                            <p class="help-text form-help-text">选择GIF的背景颜色（透明区域将显示此颜色）</p>
+                            <p class="help-text form-help-text" data-i18n="bg_color_help">选择GIF的背景颜色（透明区域将显示此颜色）</p>
                         </div>
                     </div>
                     
                     <!-- 步骤3：生成动画 -->
                     <div class="section">
-                        <h3>🚀 步骤 3: 生成动画</h3>
+                        <h3 data-i18n="step3_title">🚀 步骤 3: 生成动画</h3>
                         <div class="button-group">
                             <button id="generate-btn" class="btn btn-success btn-large generate-btn" disabled>
-                                🎬 生成GIF动画
+                                <span data-i18n="generate_btn">🎬 生成GIF动画</span>
                             </button>
-                            <button id="open-history-btn" class="btn btn-secondary history-btn" title="查看生成历史">
-                                📱 历史记录
+                            <button id="open-history-btn" class="btn btn-secondary history-btn" data-i18n-title="history_btn_title">
+                                <span data-i18n="history_btn">📱 历史记录</span>
                             </button>
                         </div>
                         
@@ -98,25 +103,29 @@
                     
                     <!-- 生成结果区域 -->
                     <div class="section result-section">
-                        <h3>🎯 生成结果</h3>
+                        <h3 data-i18n="result_title">🎯 生成结果</h3>
                         <div class="result-content">
                             <div id="gif-preview-container" style="display:none;">
                                 <div class="preview-wrapper">
                                     <img id="preview-gif" class="preview-gif">
-                                    <button id="close-preview-btn" class="close-preview-btn" title="关闭预览">✖</button>
+                                    <button id="close-preview-btn" class="close-preview-btn" data-i18n-title="close_preview">✖</button>
                                 </div>
                                 <div class="preview-actions">
                                     <a id="download-link" href="#" download="output.gif">
-                                        <button class="btn btn-success btn-large generate-btn">📥 下载GIF</button>
+                                        <button class="btn btn-success btn-large generate-btn">
+                                            <span data-i18n="download_btn">📥 下载GIF</span>
+                                        </button>
                                     </a>
-                                    <button id="copy-gif-btn" class="btn btn-primary btn-large">📋 复制GIF</button>
+                                    <button id="copy-gif-btn" class="btn btn-primary btn-large">
+                                        <span data-i18n="copy_btn">📋 复制GIF</span>
+                                    </button>
                                 </div>
                                 <div id="gif-size-info" class="size-info"></div>
                             </div>
                             <div class="no-result-message" id="no-result-message">
                                 <div class="no-result-icon">🎬</div>
-                                <div class="no-result-text">还没有生成结果</div>
-                                <div class="no-result-hint">点击"生成GIF动画"按钮开始制作</div>
+                                <div class="no-result-text" data-i18n="no_result_text">还没有生成结果</div>
+                                <div class="no-result-hint" data-i18n="no_result_hint">点击"生成GIF动画"按钮开始制作</div>
                             </div>
                         </div>
                     </div>
@@ -126,14 +135,14 @@
                 <div class="right-panel">
                     <div class="files-panel">
                         <div class="files-panel-header">
-                            <h3>🎬 帧序列</h3>
-                            <div class="files-count" id="files-count">0 个文件</div>
+                            <h3 data-i18n="frame_sequence">🎬 帧序列</h3>
+                            <div class="files-count" id="files-count" data-i18n="files_count">0 个文件</div>
                         </div>
                         
                         <!-- 卡片大小控制器 -->
                         <div class="card-size-control" id="card-size-control" style="display: none;">
                             <div class="form-control-row">
-                                <label for="card-size-slider">卡片大小:</label>
+                                <label for="card-size-slider" data-i18n="card_size_label">卡片大小:</label>
                                 <div class="range-input-group">
                                     <input type="range" id="card-size-slider" min="100" max="250" value="150" step="10" class="range-input custom-slider">
                                     <span id="card-size-value" class="range-value value-display">150</span>
@@ -153,19 +162,19 @@
     <div id="context-menu" class="context-menu">
         <div class="context-menu-item" id="context-copy">
             <span>📋</span>
-            <span>复制选中的帧</span>
+            <span data-i18n="context_copy">复制选中的帧</span>
         </div>
         <div class="context-menu-item" id="context-paste">
             <span>📌</span>
-            <span>粘贴帧到此位置</span>
+            <span data-i18n="context_paste">粘贴帧到此位置</span>
         </div>
         <div class="context-menu-item" id="context-delete">
             <span>🗑️</span>
-            <span>删除选中的帧</span>
+            <span data-i18n="context_delete">删除选中的帧</span>
         </div>
         <div class="context-menu-item" id="context-set-delay">
             <span>⏱️</span>
-            <span>设置选中帧时长</span>
+            <span data-i18n="context_set_delay">设置选中帧时长</span>
         </div>
     </div>
 
@@ -174,19 +183,20 @@
         <div id="delay-dialog" class="delay-dialog">
             <div class="delay-dialog-header">
                 <div class="delay-dialog-close" id="delay-dialog-close">✖</div>
-                <h3>⏱️ 批量设置帧时长</h3>
+                <h3 data-i18n="dialog.batch-delay.title">⏱️ 批量设置帧时长</h3>
             </div>
             <div class="delay-dialog-content">
                 <div class="delay-input-group">
-                    <label for="batch-delay-input">持续时长</label>
+                    <label for="batch-delay-input" data-i18n="dialog.batch-delay.duration">持续时长</label>
                     <div class="delay-input-wrapper">
-                        <input type="number" id="batch-delay-input" min="50" max="2000" step="10" value="100" placeholder="输入毫秒数">
+                        <input type="number" id="batch-delay-input" min="50" max="2000" step="10" value="100" 
+                               data-i18n="dialog.batch-delay.placeholder" data-i18n-placeholder="输入毫秒数">
                         <span class="delay-input-suffix">ms</span>
                     </div>
                 </div>
                 <div class="delay-dialog-buttons">
-                    <button id="delay-cancel-btn" class="control-btn">取消</button>
-                    <button id="delay-confirm-btn" class="control-btn">确定</button>
+                    <button id="delay-cancel-btn" class="control-btn" data-i18n="dialog.cancel">取消</button>
+                    <button id="delay-confirm-btn" class="control-btn" data-i18n="dialog.confirm">确定</button>
                 </div>
             </div>
         </div>
@@ -197,17 +207,17 @@
         <div id="delete-dialog" class="delay-dialog">
             <div class="delay-dialog-header">
                 <div class="delay-dialog-close" id="delete-dialog-close">✖</div>
-                <h3>🗑️ 删除选中帧</h3>
+                <h3 data-i18n="dialog.delete.title">🗑️ 删除选中帧</h3>
             </div>
             <div class="delay-dialog-content">
                 <div class="delete-confirmation-message">
                     <div class="delete-icon">⚠️</div>
                     <p id="delete-message">确定要删除选中的 <span id="delete-count">0</span> 个帧吗？</p>
-                    <p class="delete-warning">此操作不可撤销！</p>
+                    <p class="delete-warning" data-i18n="dialog.delete.warning">此操作不可撤销！</p>
                 </div>
                 <div class="delay-dialog-buttons">
-                    <button id="delete-cancel-btn" class="control-btn">取消</button>
-                    <button id="delete-confirm-btn" class="control-btn delete-btn">删除</button>
+                    <button id="delete-cancel-btn" class="control-btn" data-i18n="dialog.cancel">取消</button>
+                    <button id="delete-confirm-btn" class="control-btn delete-btn" data-i18n="dialog.delete.button">删除</button>
                 </div>
             </div>
         </div>
@@ -220,7 +230,7 @@
     <footer class="author-info">
         <div class="author-content">
             <span class="author-text">
-                <span class="author-label">作者：</span>
+                <span class="author-label" data-i18n="author_label">作者：</span>
                 <span class="author-name">Arminosi</span>
             </span>
             <span class="separator">|</span>
@@ -236,6 +246,9 @@
 
     <!-- JavaScript库和模块 -->
     <script src="https://unpkg.com/gif.js@0.2.0/dist/gif.js"></script>
+    
+    <!-- 国际化系统 -->
+    <script src="js/i18n.js"></script>
     
     <!-- 应用程序模块 -->
     <script src="js/core.js"></script>
@@ -256,8 +269,12 @@
             const fileItems = document.querySelectorAll('#file-list .file-item');
             const count = fileItems.length;
             const countElement = document.getElementById('files-count');
-            if (countElement) {
-                countElement.textContent = `${count} 个文件`;
+            if (countElement && window.i18n) {
+                if (window.i18n.getCurrentLanguage() === 'zh') {
+                    countElement.textContent = `${count} 个文件`;
+                } else {
+                    countElement.textContent = count === 1 ? `${count} file` : `${count} files`;
+                }
             }
         }
         
@@ -267,6 +284,13 @@
             const observer = new MutationObserver(updateFilesCount);
             observer.observe(fileList, { childList: true, subtree: true });
         }
+        
+        // 监听语言切换，更新文件计数
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('lang-btn')) {
+                setTimeout(updateFilesCount, 100); // 延迟更新，确保语言已切换
+            }
+        });
         
         // 初始更新
         document.addEventListener('DOMContentLoaded', updateFilesCount);

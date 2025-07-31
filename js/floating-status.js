@@ -267,10 +267,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // 添加测试功能（可选）
     window.testFloatingStatus = function() {
         console.log('测试悬浮状态提示...');
-        setTimeout(() => FloatingStatus.success('✅ 成功示例消息'), 500);
-        setTimeout(() => FloatingStatus.error('❌ 错误示例消息'), 1000);
-        setTimeout(() => FloatingStatus.warning('⚠️ 警告示例消息'), 1500);
-        setTimeout(() => FloatingStatus.info('ℹ️ 信息示例消息'), 2000);
-        setTimeout(() => FloatingStatus.processing('⏳ 处理中...'), 2500);
+        const messages = [
+            'status.select_images_first',
+            'status.gif_creation_complete', 
+            'status.processing_frames',
+            'status.import_success',
+            'status.deleted'
+        ];
+        
+        messages.forEach((key, index) => {
+            setTimeout(() => {
+                const message = window.i18n ? window.i18n.t(key, { count: 5 }) : key;
+                const types = ['success', 'error', 'warning', 'info', 'processing'];
+                FloatingStatus.show(message, types[index % types.length], 3000);
+            }, (index + 1) * 1000);
+        });
     };
 });
