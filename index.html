@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎨 PNG转GIF动画制作工具 v2.0</title>
+    <title>🎨 PNG转GIF动画制作工具 v2.3</title>
     
     <!-- CSS样式文件 -->
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/file-list.css">
     <link rel="stylesheet" href="css/form-controls.css">
-    <link rel="stylesheet" href="css/history-window.css">
+    <link rel="stylesheet" href="css/history-window-v3.css">
+    <link rel="stylesheet" href="css/history-cards.css">
 </head>
 <body>
     <div class="container">
@@ -17,7 +18,7 @@
             <h1>
                 <span class="title-icon">🎨</span>
                 <span class="title-text">PNG转GIF动画制作工具</span>
-                <span class="title-version">v2.0</span>
+                <span class="title-version">v2.3</span>
             </h1>
         </div>
         
@@ -188,13 +189,31 @@
     <!-- 右上角悬浮状态提示系统 -->
     <div id="floating-status-container" class="floating-status-container"></div>
 
+    <!-- 作者信息 -->
+    <footer class="author-info">
+        <div class="author-content">
+            <span class="author-text">
+                <span class="author-label">作者：</span>
+                <span class="author-name">Arminosi</span>
+            </span>
+            <span class="separator">|</span>
+            <span class="github-link">
+                <span class="github-label">Github：</span>
+                <a href="https://github.com/Arminosi/PNG_to_GIF_Animation_Tool" target="_blank" rel="noopener noreferrer">
+                    <span class="github-icon">🔗</span>
+                    <span class="github-url">PNG_to_GIF_Animation_Tool</span>
+                </a>
+            </span>
+        </div>
+    </footer>
+
     <!-- JavaScript库和模块 -->
     <script src="https://unpkg.com/gif.js@0.2.0/dist/gif.js"></script>
     
     <!-- 应用程序模块 -->
     <script src="js/core.js"></script>
     <script src="js/floating-status.js"></script>
-    <script src="js/history-manager.js"></script>
+    <script src="js/history-manager-v3.js"></script>
     <script src="js/file-manager.js"></script>
     <script src="js/context-menu.js"></script>
     <script src="js/card-size-controller.js"></script>

@@ -769,3 +769,438 @@
 .history-item:nth-child(odd) {
     animation-delay: 0.05s;
 }
+
+/* ================================
+   自定义滚动条 - 现代化设计
+   ================================ */
+.custom-scrollbar {
+    position: absolute;
+    right: 4px;
+    top: 20px;
+    bottom: 20px;
+    width: 20px;
+    z-index: 1001;
+    display: block !important; /* 强制显示 */
+    opacity: 1; /* 完全不透明，确保可见 */
+    background: rgba(255, 0, 0, 0.1); /* 临时添加红色背景用于调试 */
+    transition: opacity 0.3s ease;
+}
+
+.custom-scrollbar:hover {
+    opacity: 1;
+    background: rgba(255, 0, 0, 0.2);
+}
+
+.history-window-content:hover .custom-scrollbar {
+    opacity: 1;
+}
+
+.scrollbar-track {
+    position: relative;
+    width: 10px;
+    height: calc(100% - 60px);
+    background: rgba(0, 0, 0, 0.3); /* 更明显的背景 */
+    border-radius: 5px;
+    margin: 0 auto;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.scrollbar-track:hover {
+    width: 12px;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.scrollbar-thumb {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 3px;
+    cursor: grab;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    min-height: 20px;
+}
+
+.scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #5a67d8, #6b5b95);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.scrollbar-thumb.dragging {
+    cursor: grabbing;
+    background: linear-gradient(135deg, #4c51bf, #553c9a);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.scrollbar-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 8px;
+}
+
+.scroll-btn {
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.scroll-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #5a67d8, #6b5b95);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.scroll-btn:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.scroll-btn:disabled {
+    background: rgba(0, 0, 0, 0.2);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* ================================
+   分页控制器样式 - 现代化设计
+   ================================ */
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 8px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.page-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.page-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(103, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.page-btn:hover:not(:disabled)::before {
+    opacity: 1;
+}
+
+.page-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(103, 126, 234, 0.3);
+}
+
+.page-btn:active:not(:disabled) {
+    transform: translateY(-1px);
+}
+
+.page-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.page-btn span {
+    position: relative;
+    z-index: 1;
+}
+
+.page-input-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 4px 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.page-input {
+    width: 40px;
+    height: 24px;
+    border: none;
+    background: transparent;
+    color: white;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    outline: none;
+}
+
+.page-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.page-input:focus {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.page-info {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* ================================
+   分页网格布局 - 一行4个卡片
+   ================================ */
+.pagination-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 一行4个卡片 */
+    grid-template-rows: 1fr; /* 只有一行 */
+    gap: 16px;
+    padding: 20px;
+    height: calc(100% - 80px); /* 为底部信息预留空间 */
+    align-content: center; /* 垂直居中 */
+    align-items: stretch; /* 拉伸到相同高度 */
+    overflow: hidden;
+}
+
+.pagination-grid .history-card {
+    margin: 0;
+    height: auto; /* 自适应高度，但保持一致 */
+    max-height: none; /* 移除最大高度限制 */
+    min-height: 200px; /* 设置最小高度确保美观 */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    width: 100%; /* 确保填满网格单元 */
+}
+
+/* 调整分页模式下卡片内部元素的尺寸 */
+.pagination-grid .history-card .card-header {
+    padding: 10px 12px;
+    min-height: auto;
+}
+
+.pagination-grid .history-card .card-content {
+    flex: 1;
+    padding: 10px 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pagination-grid .history-card .gif-preview {
+    max-height: 100px; /* 增加预览图高度 */
+    max-width: 100%;
+    width: auto;
+    margin: 0 auto 8px auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.pagination-grid .history-card .card-footer {
+    padding: 8px 12px;
+    min-height: auto;
+}
+
+.pagination-grid .history-card .card-title {
+    font-size: 13px; /* 稍微增大字体 */
+    line-height: 1.3;
+    margin: 0 0 8px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* 允许2行标题 */
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-align: center; /* 居中显示 */
+}
+
+.pagination-grid .history-card .card-info {
+    font-size: 11px; /* 稍微增大信息字体 */
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center; /* 居中显示 */
+}
+
+.pagination-grid .history-card .card-actions {
+    gap: 6px;
+    justify-content: center; /* 居中显示按钮 */
+    flex-wrap: wrap;
+}
+
+.pagination-grid .history-card .card-actions .btn {
+    padding: 6px 10px; /* 稍微增大按钮 */
+    font-size: 11px;
+    min-width: auto;
+    border-radius: 6px;
+}
+
+/* ================================
+   底部页码信息
+   ================================ */
+.history-footer {
+    padding: 16px 24px;
+    background: linear-gradient(135deg, 
+        rgba(103, 126, 234, 0.05), 
+        rgba(118, 75, 162, 0.03)
+    );
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-info {
+    display: flex;
+    gap: 24px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+}
+
+.footer-info strong {
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 600;
+}
+
+.pagination-grid .history-card .gif-preview {
+    max-height: 80px;
+    width: auto;
+    margin: 0 auto;
+}
+
+.pagination-grid .history-card .card-footer {
+    padding: 6px 12px;
+    min-height: auto;
+}
+
+.pagination-grid .history-card .card-title {
+    font-size: 12px;
+    line-height: 1.3;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.pagination-grid .history-card .card-info {
+    font-size: 10px;
+    gap: 8px;
+}
+
+.pagination-grid .history-card .card-actions {
+    gap: 4px;
+}
+
+.pagination-grid .history-card .card-actions .btn {
+    padding: 4px 8px;
+    font-size: 10px;
+    min-width: auto;
+}
+
+/* ================================
+   底部页码信息
+   ================================ */
+.history-footer {
+    padding: 16px 24px;
+    background: linear-gradient(135deg, 
+        rgba(103, 126, 234, 0.05), 
+        rgba(118, 75, 162, 0.03)
+    );
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-info {
+    display: flex;
+    gap: 24px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+}
+
+.footer-info strong {
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 600;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .pagination-controls {
+        gap: 4px;
+        padding: 6px 8px;
+    }
+    
+    .page-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+    }
+    
+    .page-input {
+        width: 35px;
+        height: 20px;
+        font-size: 11px;
+    }
+    
+    .pagination-grid {
+        grid-template-columns: repeat(2, 1fr); /* 手机端2列 */
+        grid-template-rows: repeat(2, 1fr); /* 2行 */
+        gap: 12px;
+        padding: 16px;
+    }
+    
+    .pagination-grid .history-card {
+        min-height: 180px; /* 手机端稍微小一点 */
+    }
+    
+    .footer-info {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+    }
+}
+
+/* 超小屏幕（小于480px）*/
+@media (max-width: 480px) {
+    .pagination-grid {
+        grid-template-columns: 1fr; /* 超小屏幕单列 */
+        grid-template-rows: repeat(4, auto);
+        gap: 12px;
+    }
+}

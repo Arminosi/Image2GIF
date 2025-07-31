@@ -74,12 +74,10 @@ h1 {
     margin-bottom: 30px;
     text-shadow: 
         0 2px 4px rgba(0,0,0,0.3),
-        0 4px 8px rgba(0,0,0,0.2),
-        0 0 20px rgba(255,255,255,0.1);
+        0 4px 8px rgba(0,0,0,0.2);
     font-weight: 400;
     letter-spacing: 2px;
     position: relative;
-    animation: titleGlow 3s ease-in-out infinite alternate;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -96,6 +94,57 @@ h1 {
 .title-text {
     flex: 1;
     min-width: max-content;
+    font-weight: 800; /* 增加字体粗细 */
+    background: linear-gradient(
+        135deg,
+        #667eea 0%,
+        #764ba2 25%,
+        #f093fb 50%,
+        #f5576c 75%,
+        #4facfe 100%
+    );
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 4s ease-in-out infinite;
+    text-shadow: none; /* 移除文字阴影，因为渐变文字不支持 */
+    position: relative;
+}
+
+/* 为渐变文字添加发光效果 */
+.title-text::before {
+    content: 'PNG转GIF动画制作工具';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        135deg,
+        #667eea 0%,
+        #764ba2 25%,
+        #f093fb 50%,
+        #f5576c 75%,
+        #4facfe 100%
+    );
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: blur(1px);
+    opacity: 0.7;
+    z-index: -1;
+    animation: gradientShift 4s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
 }
 
 .title-version {
@@ -969,6 +1018,15 @@ body::before {
     
     h1 {
         font-size: 2em;
+        gap: 8px;
+    }
+    
+    .title-text {
+        font-size: 0.85em;
+    }
+    
+    .title-text::before {
+        content: 'PNG转GIF动画制作工具';
     }
     
     .delay-dialog-content {
@@ -1102,5 +1160,169 @@ body::before {
     
     .floating-status-icon {
         font-size: 16px;
+    }
+}
+
+/* ================================
+   作者信息样式
+   ================================ */
+.author-info {
+    margin-top: 40px;
+    padding: 24px 0;
+    background: linear-gradient(135deg, 
+        rgba(102, 126, 234, 0.08) 0%, 
+        rgba(118, 75, 162, 0.12) 50%, 
+        rgba(102, 126, 234, 0.08) 100%
+    );
+    border-top: 1px solid rgba(102, 126, 234, 0.2);
+    border-bottom: 1px solid rgba(118, 75, 162, 0.1);
+    backdrop-filter: blur(15px);
+    position: relative;
+    overflow: hidden;
+}
+
+.author-info::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.1) 50%,
+        transparent 100%
+    );
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% {
+        transform: translateX(-100%);
+    }
+    50% {
+        transform: translateX(100%);
+    }
+}
+
+.author-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    position: relative;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(8px);
+    padding: 16px 24px;
+    border-radius: var(--radius-medium);
+    margin: 0 auto;
+    max-width: 800px;
+    box-shadow: var(--shadow-medium);
+}
+
+.author-text {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.author-label {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.author-name {
+    color: var(--primary-blue);
+    font-weight: 600;
+}
+
+.separator {
+    color: var(--text-muted);
+    font-weight: 300;
+}
+
+.github-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.github-label {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.github-link a {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+    color: var(--primary-blue);
+    transition: all 0.3s ease;
+    padding: 4px 8px;
+    border-radius: var(--radius-small);
+}
+
+.github-link a:hover {
+    color: var(--primary-blue-dark);
+    background: rgba(33, 150, 243, 0.08);
+    transform: translateY(-1px);
+}
+
+.github-icon {
+    font-size: 16px;
+    transition: transform 0.3s ease;
+}
+
+.github-link a:hover .github-icon {
+    transform: scale(1.1);
+}
+
+.github-url {
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .author-info {
+        margin-top: 30px;
+        padding: 20px 16px;
+    }
+    
+    .author-content {
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px 20px;
+        text-align: center;
+        margin: 0 16px;
+        max-width: none;
+    }
+    
+    .github-url {
+        font-size: 12px;
+        word-break: break-all;
+    }
+}
+
+@media (max-width: 480px) {
+    .author-info {
+        padding: 16px 12px;
+    }
+    
+    .author-content {
+        font-size: 13px;
+        padding: 14px 16px;
+        margin: 0 12px;
+    }
+    
+    .github-url {
+        font-size: 11px;
     }
 }

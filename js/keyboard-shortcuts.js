@@ -6,6 +6,16 @@
 // 初始化键盘事件监听
 function initKeyboardEvents() {
     document.addEventListener('keydown', function(e) {
+        // 检查是否在历史窗口中
+        const historyWindow = document.getElementById('history-window');
+        const isHistoryWindowOpen = historyWindow && historyWindow.style.display !== 'none' && 
+                                   historyWindow.classList.contains('show');
+        
+        // 如果历史窗口打开，不处理任何快捷键，让历史窗口自己处理
+        if (isHistoryWindowOpen) {
+            return;
+        }
+        
         // 只在没有聚焦输入框时响应快捷键
         if (document.activeElement.tagName !== 'INPUT' && 
             document.activeElement.tagName !== 'TEXTAREA') {

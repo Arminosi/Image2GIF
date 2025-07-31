@@ -180,30 +180,85 @@ function finishGif(gif, statusElement, progressContainer, progressBar, progressM
         gifSizeInfo.textContent = `GIF大小: ${(blob.size/1024).toFixed(1)} KB`;
 
         // 保存到历史记录
-        if (window.HistoryManager) {
-            const metadata = {
-                frameCount: AppCore.appState.selectedFiles.length,
-                delay: parseInt(document.getElementById('frame-delay').value),
-                dimensions: {
-                    width: previewGif.naturalWidth || 0,
-                    height: previewGif.naturalHeight || 0
-                },
-                fileName: `animation_${new Date().toISOString().slice(0,19).replace(/[:-]/g, '')}.gif`
+        if (window.HistoryManagerV3) {
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const base64Data = e.target.result;
+                const filename = `animation_${new Date().toISOString().slice(0,19).replace(/[:-]/g, '')}.gif`;
+                
+                // 收集当前所有序列帧数据
+                const sequenceFrames = [];
+                
+                try {
+                    // 使用Promise.all来处理所有帧的异步转换
+                    const framePromises = AppCore.appState.selectedFiles.map(async (file, index) => {
+                        return new Promise((resolve) => {
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+                            const img = new Image();
+                            
+                            img.onload = function() {
+                                canvas.width = img.width;
+                                canvas.height = img.height;
+                                ctx.drawImage(img, 0, 0);
+                                
+                                resolve({
+                                    name: file.name,
+                                    data: canvas.toDataURL('image/png'),
+                                    delay: AppCore.appState.frameDelays[index] || parseInt(document.getElementById('frame-delay').value),
+                                    order: index
+                                });
+                            };
+                            
+                            img.onerror = function() {
+                                // 如果图片加载失败，使用文件读取器
+                                const fileReader = new FileReader();
+                                fileReader.onload = function(e) {
+                                    resolve({
+                                        name: file.name,
+                                        data: e.target.result,
+                                        delay: AppCore.appState.frameDelays[index] || parseInt(document.getElementById('frame-delay').value),
+                                        order: index
+                                    });
+                                };
+                                fileReader.readAsDataURL(file);
+                            };
+                            
+                            // 尝试从文件列表中获取图片URL
+                            const fileCard = document.querySelector(`[data-file-name="${file.name}"]`);
+                            if (fileCard) {
+                                const imgElement = fileCard.querySelector('img');
+                                if (imgElement && imgElement.src) {
+                                    img.src = imgElement.src;
+                                } else {
+                                    // 如果没有找到图片元素，直接读取文件
+                                    img.onerror();
+                                }
+                            } else {
+                                // 如果没有找到卡片，直接读取文件
+                                img.onerror();
+                            }
+                        });
+                    });
+                    
+                    const processedFrames = await Promise.all(framePromises);
+                    
+                    // 按顺序排序
+                    sequenceFrames.push(...processedFrames.sort((a, b) => a.order - b.order));
+                    
+                } catch (error) {
+                    console.warn('处理序列帧时出错:', error);
+                }
+                
+                const options = {
+                    delay: parseInt(document.getElementById('frame-delay').value),
+                    frames: AppCore.appState.selectedFiles.length,
+                    sequenceFrames: sequenceFrames  // 保存序列帧数据
+                };
+                
+                window.HistoryManagerV3.addHistoryItem(base64Data, filename, options);
             };
-            
-            // 等待图片加载完成后再获取尺寸
-            previewGif.onload = function() {
-                metadata.dimensions.width = this.naturalWidth;
-                metadata.dimensions.height = this.naturalHeight;
-                window.HistoryManager.saveToHistory(blob, metadata);
-            };
-            
-            // 如果图片已经加载完成
-            if (previewGif.complete && previewGif.naturalWidth > 0) {
-                metadata.dimensions.width = previewGif.naturalWidth;
-                metadata.dimensions.height = previewGif.naturalHeight;
-                window.HistoryManager.saveToHistory(blob, metadata);
-            }
+            reader.readAsDataURL(blob);
         }
 
         // 关闭按钮

@@ -38,8 +38,8 @@ function initializeHistoryButton() {
     const historyBtn = document.getElementById('open-history-btn');
     if (historyBtn) {
         historyBtn.addEventListener('click', () => {
-            if (window.HistoryManager) {
-                window.HistoryManager.openWindow();
+            if (window.HistoryManagerV3) {
+                window.HistoryManagerV3.openWindow();
             } else {
                 FloatingStatus.error('历史记录管理器未加载', 3000);
             }
