@@ -1,6 +1,6 @@
 # PNG序列转GIF动画制作工具
 
-- 直接使用：https://arminosi.github.io/PNG_to_GIF_Animation_Tool/
+- 直接使用：https://arminosi.github.io/Image2GIF/
 
 - 还有一个精灵图切割工具：https://arminosi.github.io/SpriteSlice/
 
