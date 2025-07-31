@@ -14,7 +14,7 @@ class I18n {
             zh: {
                 // 标题和基本信息
                 'title': '图片转GIF动画制作工具',
-                'app.version': 'v3.3',
+                'app.version': 'v3.6',
                 'app.author': '作者：Arminosi',
                 
                 // 步骤标题和描述
@@ -25,15 +25,30 @@ class I18n {
                 
                 // 按钮文本
                 'select_files_btn': '📁 选择图片文件',
+                'upload.main_text': '点击选择图片文件',
+                'upload.sub_text': '或拖拽图片文件到此区域',
+                'upload.hint': '支持 PNG、JPG、WebP 格式',
+                'upload.drop_text': '释放文件到此处',
+                'upload.drop_hint': '支持多个文件同时上传',
+                'upload.success': '成功选择 {count} 个图片文件',
                 'generate_btn': '🎬 生成GIF动画',
+                'generating_btn': '⏳ 正在生成中...',
                 'history_btn': '📱 历史记录',
                 'download_btn': '💾 下载GIF',
                 'copy_btn': '📋 复制GIF',
                 'apply_to_all': '应用到所有帧',
                 'reset_all': '重置所有帧',
                 
+                // GIF参数信息
+                'gif_params': {
+                    'size': '文件大小:',
+                    'frames': '总帧数:',
+                    'avg_delay': '平均时长:'
+                },
+                
                 // 表单标签
                 'frame_delay_label': '⏱️ 帧间隔 (毫秒):',
+                'duration_label': '时长',
                 'bg_color_label': '🎨 背景颜色:',
                 'bg_transparent': '透明',
                 'bg_white': '白色',
@@ -71,8 +86,8 @@ class I18n {
                 'dialog.delete.title': '🗑️ 删除选中帧',
                 'dialog.delete.confirm': '确定要删除选中的',
                 'dialog.delete.frames': '个帧吗？',
-                'dialog.delete.warning': '此操作不可撤销！',
                 'dialog.delete.button': '删除',
+                'dialog.delete.undo': '撤销删除',
                 'dialog.cancel': '取消',
                 'dialog.confirm': '确定',
                 
@@ -88,6 +103,12 @@ class I18n {
                 'frame.controls.deselectAll': '⭕ 取消全选',
                 'frame.controls.copy': '📋 复制选中',
                 'frame.controls.delete': '🗑️ 删除选中',
+                'frame.controls.undo': '↶ 撤销',
+                'frame.controls.undo.tooltip': '撤销上一次操作',
+                'frame.controls.undo.delete': '撤销删除操作',
+                'frame.controls.undo.sort': '撤销排序操作',
+                'frame.controls.undo.paste': '撤销粘贴操作',
+                'frame.controls.undo.import': '撤销导入操作',
                 'frame.controls.append': '➕ 追加图片',
                 'frame.controls.append.tooltip': '追加导入图片到当前序列（支持PNG、JPG、WebP）',
                 
@@ -120,12 +141,18 @@ class I18n {
                 'status.import_success': '成功导入 {count} 个序列帧',
                 'status.import_failed': '导入序列帧失败:',
                 'status.no_history_to_clear': '没有历史记录需要清空',
-                'status.history_cleared': '已清空 {count} 个历史记录'
+                'status.history_cleared': '已清空 {count} 个历史记录',
+                'status.sort_undone': '已撤销排序操作',
+                'status.undo_failed': '撤销操作失败',
+                'status.no_undo_available': '没有可撤销的操作',
+                'status.paste_undone': '已撤销粘贴操作',
+                'status.import_undone': '已撤销导入操作',
+                'status.delete_undone': '已撤销删除操作'
             },
             en: {
                 // 标题和基本信息
                 'title': 'Image2GIF',
-                'app.version': 'v3.3',
+                'app.version': 'v3.6',
                 'app.author': 'Author: Ocean',
                 
                 // 步骤标题和描述
@@ -136,15 +163,30 @@ class I18n {
                 
                 // 按钮文本
                 'select_files_btn': '📁 Select Image Files',
+                'upload.main_text': 'Click to select image files',
+                'upload.sub_text': 'or drag and drop image files here',
+                'upload.hint': 'Supports PNG, JPG, WebP formats',
+                'upload.drop_text': 'Drop files here',
+                'upload.drop_hint': 'Multiple files supported',
+                'upload.success': 'Successfully selected {count} image files',
                 'generate_btn': '🎬 Generate GIF Animation',
+                'generating_btn': '⏳ Generating...',
                 'history_btn': '📱 History',
                 'download_btn': '💾 Download GIF',
                 'copy_btn': '📋 Copy GIF',
                 'apply_to_all': 'Apply to All Frames',
                 'reset_all': 'Reset All Frames',
                 
+                // GIF参数信息
+                'gif_params': {
+                    'size': 'File Size:',
+                    'frames': 'Total Frames:',
+                    'avg_delay': 'Avg Duration:'
+                },
+                
                 // 表单标签
                 'frame_delay_label': '⏱️ Frame Interval (ms):',
+                'duration_label': 'Duration',
                 'bg_color_label': '🎨 Background Color:',
                 'bg_transparent': 'Transparent',
                 'bg_white': 'White',
@@ -182,8 +224,8 @@ class I18n {
                 'dialog.delete.title': '🗑️ Delete Selected Frames',
                 'dialog.delete.confirm': 'Are you sure to delete',
                 'dialog.delete.frames': 'selected frames?',
-                'dialog.delete.warning': 'This action cannot be undone!',
                 'dialog.delete.button': 'Delete',
+                'dialog.delete.undo': 'Undo Delete',
                 'dialog.cancel': 'Cancel',
                 'dialog.confirm': 'Confirm',
                 
@@ -199,6 +241,12 @@ class I18n {
                 'frame.controls.deselectAll': '⭕ Deselect All',
                 'frame.controls.copy': '📋 Copy Selected',
                 'frame.controls.delete': '🗑️ Delete Selected',
+                'frame.controls.undo': '↶ Undo',
+                'frame.controls.undo.tooltip': 'Undo last operation',
+                'frame.controls.undo.delete': 'Undo delete operation',
+                'frame.controls.undo.sort': 'Undo sort operation',
+                'frame.controls.undo.paste': 'Undo paste operation',
+                'frame.controls.undo.import': 'Undo import operation',
                 'frame.controls.append': '➕ Add Images',
                 'frame.controls.append.tooltip': 'Append images to current sequence (supports PNG, JPG, WebP)',
                 
@@ -231,7 +279,13 @@ class I18n {
                 'status.import_success': 'Successfully imported {count} frames',
                 'status.import_failed': 'Failed to import frames:',
                 'status.no_history_to_clear': 'No history records to clear',
-                'status.history_cleared': 'Cleared {count} history records'
+                'status.history_cleared': 'Cleared {count} history records',
+                'status.sort_undone': 'Sort operation undone',
+                'status.undo_failed': 'Undo operation failed',
+                'status.no_undo_available': 'No operations to undo',
+                'status.paste_undone': 'Paste operation undone',
+                'status.import_undone': 'Import operation undone',
+                'status.delete_undone': 'Delete operation undone'
             }
         };
         
@@ -253,7 +307,38 @@ class I18n {
      * @returns {string} 翻译后的文本
      */
     t(key, params = {}) {
-        const translation = this.translations[this.currentLanguage]?.[key] || key;
+        const currentTranslations = this.translations[this.currentLanguage];
+        if (!currentTranslations) {
+            return key;
+        }
+        
+        // 首先尝试直接匹配完整的键（兼容原有的点号键名）
+        let translation = currentTranslations[key];
+        
+        // 如果直接匹配失败，再尝试嵌套键查找（如 'gif_params.size'）
+        if (translation === undefined && key.includes('.')) {
+            const keys = key.split('.');
+            translation = currentTranslations;
+            
+            for (const k of keys) {
+                if (translation && typeof translation === 'object') {
+                    translation = translation[k];
+                } else {
+                    translation = undefined;
+                    break;
+                }
+            }
+        }
+        
+        // 如果找不到翻译，返回原键
+        if (translation === undefined || translation === null) {
+            return key;
+        }
+        
+        // 确保翻译是字符串
+        if (typeof translation !== 'string') {
+            return key;
+        }
         
         // 替换参数，支持 {param} 和 {{param}} 两种格式
         return translation.replace(/\{(\w+)\}/g, (match, param) => {

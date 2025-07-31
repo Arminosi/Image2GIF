@@ -251,11 +251,15 @@ class DragSortController {
         
         // 保存操作到撤销栈
         if (typeof AppCore.saveOperation === 'function') {
+            console.log('保存拖拽排序操作到撤销栈');
             AppCore.saveOperation('drag-sort', {
                 fromIndex: fromIndex,
                 toIndex: toIndex,
                 originalFiles: [...AppCore.appState.selectedFiles]
             });
+            console.log('撤销栈大小:', AppCore.appState.undoStack.length);
+        } else {
+            console.error('AppCore.saveOperation 不可用');
         }
         
         // 执行重排序 - 实现插入而不是替换

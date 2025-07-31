@@ -3,6 +3,28 @@
  * @description 处理GIF动画生成和预览功能
  */
 
+// 更新GIF参数信息显示
+function updateGifParams(blob) {
+    const gifSizeValue = document.getElementById('gif-size-value');
+    const gifFramesValue = document.getElementById('gif-frames-value');
+    const gifDelayValue = document.getElementById('gif-delay-value');
+    
+    if (!gifSizeValue || !gifFramesValue || !gifDelayValue) return;
+    
+    // 文件大小
+    const sizeKB = (blob.size / 1024).toFixed(1);
+    gifSizeValue.textContent = `${sizeKB} KB`;
+    
+    // 总帧数
+    const totalFrames = AppCore.appState.selectedFiles.length;
+    gifFramesValue.textContent = `${totalFrames}`;
+    
+    // 计算平均帧时长
+    const frameDelays = AppCore.appState.selectedFiles.map(file => file.delay || 100);
+    const avgDelay = frameDelays.reduce((sum, delay) => sum + delay, 0) / frameDelays.length;
+    gifDelayValue.textContent = `${Math.round(avgDelay)}ms`;
+}
+
 // 获取选择的背景颜色
 function getSelectedBackgroundColor() {
     const selectedRadio = document.querySelector('input[name="background"]:checked');
@@ -48,7 +70,7 @@ function generateGIF() {
     
     // 处理期间禁用生成按钮并更改文本
     generateBtn.disabled = true;
-    generateBtn.textContent = '⏳ 正在生成中...';
+    generateBtn.textContent = window.i18n ? window.i18n.t('generating_btn') : '⏳ 正在生成中...';
     
     // 隐藏之前的预览
     document.getElementById('gif-preview-container').style.display = 'none';
@@ -171,8 +193,9 @@ function finishGif(gif, statusElement, progressContainer, progressBar, progressM
         const previewContainer = document.getElementById('gif-preview-container');
         const previewGif = document.getElementById('preview-gif');
         const downloadLink = document.getElementById('download-link');
-        const gifSizeInfo = document.getElementById('gif-size-info');
-        const copyGifBtn = document.getElementById('copy-gif-btn');
+        const gifSizeValue = document.getElementById('gif-size-value');
+        const gifFramesValue = document.getElementById('gif-frames-value');
+        const gifDelayValue = document.getElementById('gif-delay-value');
         const closeBtn = document.getElementById('close-preview-btn');
 
         const gifUrl = URL.createObjectURL(blob);
@@ -183,7 +206,8 @@ function finishGif(gif, statusElement, progressContainer, progressBar, progressM
         downloadLink.style.display = 'inline-block';
         downloadLink.download = 'frame_animation.gif';
 
-        gifSizeInfo.textContent = `GIF大小: ${(blob.size/1024).toFixed(1)} KB`;
+        // 更新GIF参数信息
+        updateGifParams(blob);
 
         // 保存到历史记录
         if (window.HistoryManagerV3) {
@@ -272,27 +296,10 @@ function finishGif(gif, statusElement, progressContainer, progressBar, progressM
             previewContainer.style.display = 'none';
             previewGif.src = '';
             downloadLink.href = '#';
-            gifSizeInfo.textContent = '';
-        };
-
-        // 复制GIF到剪贴板
-        copyGifBtn.onclick = async function() {
-            try {
-                await navigator.clipboard.write([
-                    new window.ClipboardItem({
-                        'image/gif': blob
-                    })
-                ]);
-                gifSizeInfo.textContent = '已复制到剪贴板！';
-                setTimeout(() => {
-                    gifSizeInfo.textContent = `GIF大小: ${(blob.size/1024).toFixed(1)} KB`;
-                }, 1800);
-            } catch (err) {
-                gifSizeInfo.textContent = '复制失败，浏览器不支持或权限不足';
-                setTimeout(() => {
-                    gifSizeInfo.textContent = `GIF大小: ${(blob.size/1024).toFixed(1)} KB`;
-                }, 1800);
-            }
+            // 重置参数显示
+            if (gifSizeValue) gifSizeValue.textContent = '--';
+            if (gifFramesValue) gifFramesValue.textContent = '--';
+            if (gifDelayValue) gifDelayValue.textContent = '--';
         };
 
         // 安全地滚动到预览区域
@@ -305,7 +312,7 @@ function finishGif(gif, statusElement, progressContainer, progressBar, progressM
             const generateBtn = document.getElementById('generate-btn');
             if (generateBtn) {
                 generateBtn.disabled = false;
-                generateBtn.textContent = '🎬 生成GIF动画';
+                generateBtn.textContent = window.i18n ? window.i18n.t('generate_btn') : '🎬 生成GIF动画';
                 console.log('GIF完成 - 按钮已重置');
             }
             
@@ -359,7 +366,7 @@ function resetGenerationState(statusElement, progressContainer, progressBar, isE
     const generateBtn = document.getElementById('generate-btn');
     if (generateBtn) {
         generateBtn.disabled = false;
-        generateBtn.textContent = '🎬 生成GIF动画';
+        generateBtn.textContent = window.i18n ? window.i18n.t('generate_btn') : '🎬 生成GIF动画';
         console.log('按钮已重置:', generateBtn.textContent, '禁用状态:', generateBtn.disabled);
     }
     
@@ -461,6 +468,8 @@ function initGifGenerator() {
     // 文件输入事件
     document.getElementById('file-input').addEventListener('change', function(event) {
         FileManager.handleFileSelection(event.target.files);
+        // 重置文件输入值，确保可以重复选择相同文件
+        event.target.value = '';
     });
 }
 

@@ -73,13 +73,13 @@ function initContextMenu() {
         });
     }
     
-    // 点击遮罩关闭对话框
-    const delayOverlay = document.getElementById('delay-dialog-overlay');
-    if (delayOverlay) {
-        delayOverlay.addEventListener('click', function() {
-            hideDelayDialog();
-        });
-    }
+    // 注释：已删除点击遮罩关闭对话框功能
+    // const delayOverlay = document.getElementById('delay-dialog-overlay');
+    // if (delayOverlay) {
+    //     delayOverlay.addEventListener('click', function() {
+    //         hideDelayDialog();
+    //     });
+    // }
     
     // 删除确认对话框事件
     const deleteConfirmBtn = document.getElementById('delete-confirm-btn');
@@ -106,11 +106,12 @@ function initContextMenu() {
         });
     }
     
-    if (deleteOverlay) {
-        deleteOverlay.addEventListener('click', function() {
-            hideDeleteConfirmDialog();
-        });
-    }
+    // 注释：已删除点击遮罩关闭删除确认对话框功能
+    // if (deleteOverlay) {
+    //     deleteOverlay.addEventListener('click', function() {
+    //         hideDeleteConfirmDialog();
+    //     });
+    // }
     
     // ESC键关闭对话框
     document.addEventListener('keydown', function(e) {
@@ -315,23 +316,28 @@ function hideDeleteConfirmDialog() {
 // 执行删除操作
 function confirmDeleteFrames() {
     const selectedCount = AppCore.appState.selectedIndices.size;
+    const selectedIndicesArray = Array.from(AppCore.appState.selectedIndices);
     
-    // 保存操作到撤销栈
+    // 保存操作到撤销栈，包括文件和帧延迟数据
     AppCore.saveOperation('delete', {
-        selectedIndices: Array.from(AppCore.appState.selectedIndices),
-        deletedFiles: Array.from(AppCore.appState.selectedIndices).map(index => AppCore.appState.selectedFiles[index])
+        selectedIndices: selectedIndicesArray,
+        deletedFiles: selectedIndicesArray.map(index => AppCore.appState.selectedFiles[index]),
+        deletedDelays: selectedIndicesArray.map(index => AppCore.appState.frameDelays[index] || 100)
     });
     
     // 删除选中的帧（从后往前删，避免索引变化）
-    const indicesToDelete = Array.from(AppCore.appState.selectedIndices).sort((a, b) => b - a);
+    const indicesToDelete = selectedIndicesArray.sort((a, b) => b - a);
     
     indicesToDelete.forEach(index => {
         AppCore.appState.selectedFiles.splice(index, 1);
-        // 删除对应的帧延迟
+        // 删除对应的帧延迟（frameDelays是对象，需要删除属性并重新索引）
         if (AppCore.appState.frameDelays[index] !== undefined) {
-            AppCore.appState.frameDelays.splice(index, 1);
+            delete AppCore.appState.frameDelays[index];
         }
     });
+    
+    // 重新索引frameDelays，因为删除操作影响了索引
+    AppCore.appState.reindexFrameDelays();
     
     // 清除选择状态
     AppCore.appState.clearSelections();

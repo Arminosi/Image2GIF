@@ -58,48 +58,85 @@
 .selection-controls {
     width: 100%;
     margin: 0;
-    padding: var(--spacing-md);
-    background: var(--bg-secondary);
+    padding: var(--spacing-lg);
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-light) 100%);
     border-bottom: 1px solid var(--border-color);
     display: flex;
     flex-wrap: wrap;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-md);
     align-items: center;
     justify-content: center;
+    position: relative;
+}
+
+.selection-controls::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
 }
 
 .selection-controls .control-btn {
-    padding: var(--spacing-xs) var(--spacing-sm);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    font-weight: 500;
-    font-size: 0.8rem;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-large);
+    font-weight: 600;
+    font-size: 0.85rem;
     cursor: pointer;
-    transition: var(--transition);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     background: var(--bg-primary);
     color: var(--text-primary);
-    min-height: 32px;
+    min-height: 38px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.selection-controls .control-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.selection-controls .control-btn:hover::before {
+    left: 100%;
 }
 
 .selection-controls .control-btn:hover {
     background: var(--bg-light);
-    border-color: var(--text-secondary);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-sm);
+    border-color: var(--primary-light);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    color: var(--primary-color);
 }
 
-/* 选择信息显示 */
+.selection-controls .control-btn:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
 .selection-info {
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    font-weight: 500;
-    padding: var(--spacing-xs) var(--spacing-sm);
-    background: var(--bg-light);
-    border-radius: var(--border-radius);
-    margin-right: var(--spacing-sm);
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    border-radius: var(--border-radius-large);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
 }
 
 /* 选择模式相关样式 */
@@ -123,40 +160,57 @@
 
 .checkbox-overlay {
     position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 20px;
-    height: 20px;
-    background: var(--bg-primary);
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+    width: 24px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.95);
     border: 2px solid var(--border-color);
-    border-radius: 3px;
+    border-radius: var(--border-radius);
     opacity: 0;
     pointer-events: none;
-    transition: all 0.2s ease;
-    z-index: 5; /* 确保复选框在正确层级 */
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 5;
     cursor: pointer;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-/* 隐藏可能存在的真实复选框 */
-.checkbox-overlay input[type="checkbox"] {
-    display: none;
+.checkbox-overlay::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 10px;
+    height: 10px;
+    background: var(--primary-color);
+    border-radius: 2px;
+    transition: transform 0.2s ease;
 }
 
 .checkbox-overlay.checked {
-    background: var(--accent-color);
-    border-color: var(--accent-color);
+    background: var(--primary-color);
+    border-color: var(--primary-color);
     opacity: 1;
+    transform: scale(1.1);
+}
+
+.checkbox-overlay.checked::before {
+    transform: translate(-50%, -50%) scale(1);
+    background: white;
 }
 
 .checkbox-overlay.checked::after {
     content: '✓';
     color: white;
-    font-size: 12px;
-    font-weight: bold;
+    font-size: 14px;
+    font-weight: 900;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 
 /* ================================
@@ -191,35 +245,70 @@
    单个文件卡片
    ================================ */
 .file-item {
-    width: 100%; /* 使用100%宽度，让网格控制实际大小 */
-    max-width: var(--card-size); /* 最大宽度由CSS变量控制 */
-    background: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    overflow: visible; /* 允许拖拽提示显示 */
-    transition: var(--transition);
+    width: 100%;
+    max-width: var(--card-size);
+    background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-large);
+    overflow: visible;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     position: relative;
-    box-shadow: var(--shadow-sm);
-    z-index: 1; /* 基础层级 */
+    box-shadow: 
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    z-index: 1;
+    backdrop-filter: blur(10px);
+}
+
+.file-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    border-radius: var(--border-radius-large) var(--border-radius-large) 0 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .file-item:hover {
-    border-color: var(--primary-color);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
-    z-index: 2; /* 悬停时提升层级 */
+    border-color: var(--primary-light);
+    box-shadow: 
+        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04),
+        0 0 0 1px rgba(99, 102, 241, 0.1);
+    transform: translateY(-8px) scale(1.02);
+    z-index: 3;
+}
+
+.file-item:hover::before {
+    opacity: 1;
 }
 
 .file-item.selected {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
+    background: linear-gradient(145deg, #f0f4ff 0%, #e0e7ff 100%);
+    box-shadow: 
+        0 0 0 3px rgba(99, 102, 241, 0.2),
+        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    transform: translateY(-6px);
+}
+
+.file-item.selected::before {
+    opacity: 1;
+    background: linear-gradient(90deg, var(--success-color), var(--accent-color));
 }
 
 .file-item.dragging {
-    opacity: 0.5;
-    transform: rotate(5deg);
-    z-index: 10; /* 拖拽时最高层级 */
+    opacity: 0.8;
+    transform: rotate(8deg) scale(1.1);
+    z-index: 100;
+    filter: drop-shadow(0 25px 50px rgba(0,0,0,0.25));
+    border-color: var(--accent-color);
 }
 
 /* 拖拽相关样式 */
@@ -230,30 +319,51 @@
     filter: drop-shadow(0 8px 16px rgba(0,0,0,0.3));
 }
 
-/* 拖拽提示样式 */
 .drag-hint {
     position: absolute;
-    bottom: -35px;
+    bottom: -45px;
     left: 50%;
     transform: translateX(-50%);
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
     color: white;
-    padding: var(--spacing-xs) var(--spacing-md);
-    border-radius: var(--border-radius-large);
-    font-size: 0.75rem;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--border-radius-xl);
+    font-size: 0.8rem;
+    font-weight: 700;
     white-space: nowrap;
     opacity: 0;
-    transition: all 0.3s ease;
-    z-index: 15; /* 确保提示在最上层 */
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 15;
     pointer-events: none;
-    box-shadow: var(--shadow-lg);
-    font-weight: 600;
+    box-shadow: 
+        0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.drag-hint::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid var(--primary-color);
+    filter: drop-shadow(0 -2px 4px rgba(0,0,0,0.1));
 }
 
 .file-item:hover .drag-hint,
 .file-item.dragging .drag-hint {
     opacity: 1;
-    transform: translateX(-50%) translateY(-5px);
+    transform: translateX(-50%) translateY(-10px);
+}
+
+.file-item.dragging .drag-hint {
+    background: linear-gradient(135deg, var(--success-color), var(--accent-color));
 }
 
 /* 插入指示器 - 改进版 */
@@ -277,7 +387,6 @@
 
 .insert-indicator.active {
     opacity: 1;
-    animation: insertPulse 1.5s ease-in-out infinite;
 }
 
 .insert-indicator.left {
@@ -288,17 +397,7 @@
     right: -8px;
 }
 
-/* 插入指示器动画 */
-@keyframes insertPulse {
-    0%, 100% {
-        transform: scaleY(1);
-        box-shadow: 0 0 12px var(--accent-color);
-    }
-    50% {
-        transform: scaleY(1.1);
-        box-shadow: 0 0 20px var(--accent-color);
-    }
-}
+/* 插入指示器动画已移除 */
 
 /* 交换区域高亮 */
 .file-item.swap-target {
@@ -308,19 +407,11 @@
         rgba(79, 172, 254, 0.1) 100%
     );
     border-color: var(--accent-color);
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
-    animation: swapGlow 2s ease-in-out infinite;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(79, 172, 254, 0.3);
 }
 
-@keyframes swapGlow {
-    0%, 100% {
-        box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
-    }
-    50% {
-        box-shadow: 0 8px 35px rgba(79, 172, 254, 0.5);
-    }
-}
+/* 交换动画已移除 */
 
 /* 拖拽预览幽灵 */
 .drag-preview-ghost {
@@ -370,70 +461,106 @@
     width: 100%;
     height: var(--card-preview-height);
     position: relative;
-    background: var(--bg-secondary);
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    border-radius: var(--border-radius-large) var(--border-radius-large) 0 0;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .file-preview {
-    max-width: 100%;
-    max-height: 100%;
+    max-width: calc(100% - 16px);
+    max-height: calc(100% - 16px);
     object-fit: contain;
-    transition: var(--transition);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .file-preview:hover {
-    transform: scale(1.05);
+    transform: scale(1.08);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
 }
 
-/* 文件头部信息 */
 .file-header {
+    position: absolute;
+    top: var(--spacing-xs);
+    left: var(--spacing-xs);
+    right: var(--spacing-xs);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: var(--spacing-xs);
+    z-index: 2;
 }
 
 .file-number {
-    background: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
     color: var(--text-white);
-    font-size: 0.7rem;
-    font-weight: 600;
-    padding: 2px 6px;
-    border-radius: 3px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius);
     line-height: 1;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
 }
 
 /* ================================
    卡片信息区域
    ================================ */
 .file-info {
-    padding: var(--spacing-sm);
-    background: var(--bg-primary);
-    border-top: 1px solid var(--border-color);
+    padding: var(--spacing-md);
+    background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+    border-radius: 0 0 var(--border-radius-large) var(--border-radius-large);
+    position: relative;
+}
+
+.file-info::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: var(--spacing-sm);
+    right: var(--spacing-sm);
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-color), transparent);
 }
 
 .file-name {
-    font-size: 0.8rem;
-    font-weight: 500;
+    font-size: 0.85rem;
+    font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: var(--spacing-xs);
+    margin-bottom: var(--spacing-sm);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 1.4;
+    background: linear-gradient(45deg, var(--text-primary), var(--text-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .file-details {
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    margin-bottom: var(--spacing-xs);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-sm);
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .file-size {
     font-size: 0.7rem;
     color: var(--text-muted);
+    font-weight: 600;
+    background: var(--bg-light);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
 }
 
 /* ================================
@@ -441,26 +568,70 @@
    ================================ */
 .frame-delay-container {
     display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-sm);
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+}
+
+.delay-input-row {
+    display: flex;
     align-items: center;
     gap: var(--spacing-xs);
-    margin-top: var(--spacing-xs);
+    justify-content: center;
 }
 
 .delay-label {
-    font-size: 0.7rem;
-    color: var(--text-secondary);
-    font-weight: 500;
+    font-size: 0.75rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-align: center;
+    align-self: center;
 }
 
 .frame-delay-input {
-    flex: 1;
-    padding: 2px 4px;
-    border: 1px solid var(--border-color);
-    border-radius: 3px;
-    font-size: 0.7rem;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 0.75rem;
     text-align: center;
-    width: 50px;
-    min-width: 40px;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    transition: all 0.2s ease;
+    min-width: 50px;
+    max-width: 70px;
+}
+
+/* 隐藏number input的默认spinner按钮，防止遮挡文字 */
+.frame-delay-input::-webkit-outer-spin-button,
+.frame-delay-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox浏览器的spinner按钮隐藏 */
+.frame-delay-input[type=number] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.frame-delay-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    transform: scale(1.05);
+}
+
+.frame-delay-input:hover {
+    border-color: var(--primary-light);
 }
 
 .frame-delay-input:focus {

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎨 Image2GIF v3.3</title>
+    <title>🎨 Image2GIF v3.6</title>
     
     <!-- CSS样式文件 -->
     <link rel="stylesheet" href="css/main.css">
@@ -18,7 +18,7 @@
             <h1>
                 <span class="title-icon">🎨</span>
                 <span class="title-text" data-i18n="title">Image2GIF</span>
-                <span class="title-version" data-i18n="app.version">v3.3</span>
+                <span class="title-version" data-i18n="app.version">v3.6</span>
             </h1>
             <div class="language-switch">
                 <button class="lang-btn active" data-lang="zh" title="中文">中文</button>
@@ -32,9 +32,17 @@
                 <!-- 左侧控制面板 -->
                 <div class="left-panel">
                     <!-- 步骤1：选择文件 -->
-                    <div class="section upload-area">
+                    <div class="section upload-area" id="upload-area">
                         <h3 data-i18n="step1_title">📁 步骤 1: 选择图片文件</h3>
                         <p data-i18n="step1_desc">选择多个图片文件，支持PNG、JPG、WebP格式，将按文件名自动排序生成动画帧</p>
+                        <div class="upload-zone" id="upload-zone">
+                            <div class="upload-icon">📁</div>
+                            <div class="upload-text">
+                                <span class="upload-main-text" data-i18n="upload.main_text">点击选择图片文件</span>
+                                <span class="upload-sub-text" data-i18n="upload.sub_text">或拖拽图片文件到此区域</span>
+                            </div>
+                            <div class="upload-hint" data-i18n="upload.hint">支持 PNG、JPG、WebP 格式</div>
+                        </div>
                         <input type="file" id="file-input" accept=".png,.jpg,.jpeg,.webp" multiple>
                         <button class="btn btn-primary btn-large upload-btn" onclick="document.getElementById('file-input').click()">
                             <span data-i18n="select_files_btn">📁 选择图片文件</span>
@@ -83,52 +91,6 @@
                             <p class="help-text form-help-text" data-i18n="bg_color_help">选择GIF的背景颜色（透明区域将显示此颜色）</p>
                         </div>
                     </div>
-                    
-                    <!-- 步骤3：生成动画 -->
-                    <div class="section">
-                        <h3 data-i18n="step3_title">🚀 步骤 3: 生成动画</h3>
-                        <div class="button-group">
-                            <button id="generate-btn" class="btn btn-success btn-large generate-btn" disabled>
-                                <span data-i18n="generate_btn">🎬 生成GIF动画</span>
-                            </button>
-                            <button id="open-history-btn" class="btn btn-secondary history-btn" data-i18n-title="history_btn_title">
-                                <span data-i18n="history_btn">📱 历史记录</span>
-                            </button>
-                        </div>
-                        
-                        <div id="progress-container" class="progress-container" style="display: none;">
-                            <div id="progress-bar" class="progress-fill">0%</div>
-                        </div>
-                    </div>
-                    
-                    <!-- 生成结果区域 -->
-                    <div class="section result-section">
-                        <h3 data-i18n="result_title">🎯 生成结果</h3>
-                        <div class="result-content">
-                            <div id="gif-preview-container" style="display:none;">
-                                <div class="preview-wrapper">
-                                    <img id="preview-gif" class="preview-gif">
-                                    <button id="close-preview-btn" class="close-preview-btn" data-i18n-title="close_preview">✖</button>
-                                </div>
-                                <div class="preview-actions">
-                                    <a id="download-link" href="#" download="output.gif">
-                                        <button class="btn btn-success btn-large generate-btn">
-                                            <span data-i18n="download_btn">📥 下载GIF</span>
-                                        </button>
-                                    </a>
-                                    <button id="copy-gif-btn" class="btn btn-primary btn-large">
-                                        <span data-i18n="copy_btn">📋 复制GIF</span>
-                                    </button>
-                                </div>
-                                <div id="gif-size-info" class="size-info"></div>
-                            </div>
-                            <div class="no-result-message" id="no-result-message">
-                                <div class="no-result-icon">🎬</div>
-                                <div class="no-result-text" data-i18n="no_result_text">还没有生成结果</div>
-                                <div class="no-result-hint" data-i18n="no_result_hint">点击"生成GIF动画"按钮开始制作</div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 
                 <!-- 右侧文件列表面板 -->
@@ -152,6 +114,67 @@
                         </div>
                         
                         <div id="file-list" class="file-list"></div>
+                    </div>
+                    
+                    <!-- 底部操作区域 -->
+                    <div class="bottom-actions-container">
+                        <!-- 步骤3：生成动画 -->
+                        <div class="section generate-section">
+                            <h3 data-i18n="step3_title">🚀 步骤 3: 生成动画</h3>
+                            <div class="button-group">
+                                <button id="generate-btn" class="btn btn-success btn-large generate-btn" disabled>
+                                    <span data-i18n="generate_btn">🎬 生成GIF动画</span>
+                                </button>
+                                <button id="open-history-btn" class="btn btn-secondary history-btn" data-i18n-title="history_btn_title">
+                                    <span data-i18n="history_btn">📱 历史记录</span>
+                                </button>
+                            </div>
+                            
+                            <div id="progress-container" class="progress-container" style="display: none;">
+                                <div id="progress-bar" class="progress-fill">0%</div>
+                            </div>
+                        </div>
+                        
+                        <!-- 生成结果区域 -->
+                        <div class="section result-section">
+                            <h3 data-i18n="result_title">🎯 生成结果</h3>
+                            <div class="result-content">
+                                <div id="gif-preview-container" style="display:none;">
+                                    <div class="preview-main-area">
+                                        <div class="preview-wrapper">
+                                            <img id="preview-gif" class="preview-gif">
+                                            <button id="close-preview-btn" class="close-preview-btn" data-i18n-title="close_preview">✖</button>
+                                        </div>
+                                        <div class="preview-actions">
+                                            <a id="download-link" href="#" download="output.gif">
+                                                <button class="btn btn-success btn-large generate-btn">
+                                                    <span data-i18n="download_btn">📥 下载GIF</span>
+                                                </button>
+                                            </a>
+                                            <div id="gif-params-info" class="gif-params-info">
+                                                <div class="param-item">
+                                                    <span class="param-label" data-i18n="gif_params.size">文件大小:</span>
+                                                    <span id="gif-size-value" class="param-value">--</span>
+                                                </div>
+                                                <div class="param-item">
+                                                    <span class="param-label" data-i18n="gif_params.frames">总帧数:</span>
+                                                    <span id="gif-frames-value" class="param-value">--</span>
+                                                </div>
+                                                <div class="param-item">
+                                                    <span class="param-label" data-i18n="gif_params.avg_delay">平均时长:</span>
+                                                    <span id="gif-delay-value" class="param-value">--</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="no-result-message" id="no-result-message">
+                                    <div class="no-result-icon">🎬</div>
+                                    <div class="no-result-text" data-i18n="no_result_text">还没有生成结果</div>
+                                    <div class="no-result-hint" data-i18n="no_result_hint">点击"生成GIF动画"按钮开始制作</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -213,7 +236,6 @@
                 <div class="delete-confirmation-message">
                     <div class="delete-icon">⚠️</div>
                     <p id="delete-message">确定要删除选中的 <span id="delete-count">0</span> 个帧吗？</p>
-                    <p class="delete-warning" data-i18n="dialog.delete.warning">此操作不可撤销！</p>
                 </div>
                 <div class="delay-dialog-buttons">
                     <button id="delete-cancel-btn" class="control-btn" data-i18n="dialog.cancel">取消</button>
@@ -258,6 +280,7 @@
     <script src="js/context-menu.js"></script>
     <script src="js/card-size-controller.js"></script>
     <script src="js/drag-sort-controller.js"></script>
+    <script src="js/drag-drop-upload.js"></script>
     <script src="js/keyboard-shortcuts.js"></script>
     <script src="js/gif-generator.js"></script>
     <script src="js/app.js"></script>

@@ -5,24 +5,36 @@
 
 // 文件处理函数
 function handleFileSelection(files) {
+    console.log('handleFileSelection被调用，文件数量:', files.length);
     if (files.length > 0) {
+        console.log('开始处理文件列表...');
         // 存储文件并排序（初始按文件名排序）
         AppCore.appState.selectedFiles = Array.from(files).sort((a, b) => {
             return a.name.localeCompare(b.name, undefined, {numeric: true});
         });
         
+        console.log('文件已排序，总数:', AppCore.appState.selectedFiles.length);
+        
         AppCore.appState.clearSelections();
         
         // 显示文件列表
+        console.log('开始显示文件列表...');
         displayFileList();
         
         // 启用生成按钮
-        document.getElementById('generate-btn').disabled = false;
+        const generateBtn = document.getElementById('generate-btn');
+        if (generateBtn) {
+            generateBtn.disabled = false;
+            console.log('生成按钮已启用');
+        }
         
         // 清除状态
         document.getElementById('status').textContent = '';
         
         AppCore.notifyStateUpdate();
+        console.log('文件处理完成');
+    } else {
+        console.log('没有文件需要处理');
     }
 }
 
@@ -110,6 +122,14 @@ function displayFileList() {
     deleteSelectedBtn.onclick = deleteSelected;
     deleteSelectedBtn.id = 'delete-selected-btn';
     
+    const undoBtn = document.createElement('button');
+    undoBtn.className = 'control-btn undo-btn';
+    undoBtn.innerHTML = '<span data-i18n="frame.controls.undo">↶ 撤销</span>';
+    undoBtn.onclick = undoLastOperation;
+    undoBtn.id = 'undo-btn';
+    undoBtn.style.display = 'none'; // 初始隐藏
+    undoBtn.setAttribute('data-i18n-title', 'frame.controls.undo.tooltip');
+    
     const appendImportBtn = document.createElement('button');
     appendImportBtn.className = 'control-btn';
     appendImportBtn.innerHTML = '<span data-i18n="frame.controls.append">➕ 追加图片</span>';
@@ -125,6 +145,7 @@ function displayFileList() {
     controls.appendChild(deselectAllBtn);
     controls.appendChild(copySelectedBtn);
     controls.appendChild(deleteSelectedBtn);
+    controls.appendChild(undoBtn);
     controls.appendChild(appendImportBtn);
     controls.appendChild(selectionInfo);
     
@@ -157,6 +178,7 @@ function displayFileList() {
     }
 
     updateSelectionInfo();
+    updateUndoButtonState(); // 更新撤销按钮状态
 }
 
 // 创建文件项元素
@@ -245,7 +267,8 @@ function createFileItem(file, index) {
     
     const delayLabel = document.createElement('span');
     delayLabel.className = 'delay-label';
-    delayLabel.textContent = '时长';
+    delayLabel.setAttribute('data-i18n', 'duration_label');
+    delayLabel.textContent = window.i18n ? window.i18n.t('duration_label') : '时长';
     
     const delayInput = document.createElement('input');
     delayInput.type = 'number';
@@ -270,9 +293,14 @@ function createFileItem(file, index) {
     delayUnit.className = 'delay-unit';
     delayUnit.textContent = 'ms';
     
+    // 创建输入框和单位的行容器
+    const delayInputRow = document.createElement('div');
+    delayInputRow.className = 'delay-input-row';
+    delayInputRow.appendChild(delayInput);
+    delayInputRow.appendChild(delayUnit);
+    
     frameDelayContainer.appendChild(delayLabel);
-    frameDelayContainer.appendChild(delayInput);
-    frameDelayContainer.appendChild(delayUnit);
+    frameDelayContainer.appendChild(delayInputRow);
     
     fileInfo.appendChild(fileHeader);
     fileInfo.appendChild(frameDelayContainer);
@@ -302,6 +330,11 @@ function createFileItem(file, index) {
         // 显示右键菜单 (使用clientX/Y避免滚动位置影响)
         ContextMenu.show(e.clientX, e.clientY, index);
     });
+    
+    // 应用国际化到文件卡片
+    if (window.i18n) {
+        window.i18n.applyToContainer(fileItem);
+    }
     
     return fileItem;
 }
@@ -521,10 +554,14 @@ function moveFile(fromIndex, toIndex) {
 
 // 撤销最后一次操作
 function undoLastOperation() {
+    console.log('执行撤销操作...');
     const lastOperation = AppCore.appState.undo();
     if (!lastOperation) {
+        console.log('没有可撤销的操作');
         return false;
     }
+    
+    console.log('撤销操作类型:', lastOperation.type, '数据:', lastOperation.data);
     
     switch (lastOperation.type) {
         case 'paste':
@@ -533,6 +570,10 @@ function undoLastOperation() {
             AppCore.appState.selectedFiles.splice(originalLength, fileCount);
             displayFileList();
             AppCore.notifyStateUpdate();
+            if (window.FloatingStatus) {
+                const message = window.i18n ? window.i18n.t('status.paste_undone') : '已撤销粘贴操作';
+                FloatingStatus.show(message, 'success', 2000);
+            }
             return true;
         case 'paste-at-position':
             // 撤销位置粘贴：移除在指定位置粘贴的文件
@@ -542,6 +583,10 @@ function undoLastOperation() {
             AppCore.appState.clearSelections(); // 清除选择状态
             displayFileList();
             AppCore.notifyStateUpdate();
+            if (window.FloatingStatus) {
+                const message = window.i18n ? window.i18n.t('status.paste_undone') : '已撤销粘贴操作';
+                FloatingStatus.show(message, 'success', 2000);
+            }
             return true;
         case 'append-import':
             // 撤销追加导入：移除最后追加的文件
@@ -550,10 +595,74 @@ function undoLastOperation() {
             AppCore.appState.clearSelections(); // 清除选择状态
             displayFileList();
             AppCore.notifyStateUpdate();
+            if (window.FloatingStatus) {
+                const message = window.i18n ? window.i18n.t('status.import_undone') : '已撤销导入操作';
+                FloatingStatus.show(message, 'success', 2000);
+            }
             return true;
+        case 'drag-sort':
+            // 撤销拖拽排序：恢复原始文件顺序
+            console.log('执行拖拽排序撤销');
+            const { originalFiles } = lastOperation.data;
+            if (originalFiles && Array.isArray(originalFiles)) {
+                console.log('恢复原始文件顺序，文件数量:', originalFiles.length);
+                AppCore.appState.selectedFiles = [...originalFiles];
+                AppCore.appState.clearSelections(); // 清除选择状态
+                displayFileList();
+                AppCore.notifyStateUpdate();
+                if (window.FloatingStatus) {
+                    const message = window.i18n ? window.i18n.t('status.sort_undone') : '已撤销排序操作';
+                    FloatingStatus.show(message, 'success', 2000);
+                }
+                console.log('拖拽排序撤销完成');
+                return true;
+            }
+            console.error('撤销拖拽排序失败：originalFiles无效');
+            return false;
+        case 'delete':
+            // 撤销删除：恢复被删除的文件
+            console.log('执行删除撤销');
+            const { selectedIndices, deletedFiles, deletedDelays } = lastOperation.data;
+            if (deletedFiles && Array.isArray(deletedFiles) && selectedIndices && Array.isArray(selectedIndices)) {
+                console.log('恢复被删除的文件，文件数量:', deletedFiles.length);
+                
+                // 按原始索引顺序恢复文件（从小到大排序）
+                const sortedData = selectedIndices.map((index, i) => ({
+                    index: index,
+                    file: deletedFiles[i],
+                    delay: deletedDelays ? deletedDelays[i] : 100
+                })).sort((a, b) => a.index - b.index);
+                
+                // 从前往后插入文件，确保索引正确
+                sortedData.forEach(({ index, file, delay }) => {
+                    AppCore.appState.selectedFiles.splice(index, 0, file);
+                    // 恢复帧延迟数据（frameDelays是对象，不是数组）
+                    AppCore.appState.frameDelays[index] = delay;
+                });
+                
+                // 重新索引frameDelays，因为插入操作可能影响后续索引
+                AppCore.appState.reindexFrameDelays();
+                
+                AppCore.appState.clearSelections(); // 清除选择状态
+                displayFileList();
+                AppCore.notifyStateUpdate();
+                
+                if (window.FloatingStatus) {
+                    const message = window.i18n ? window.i18n.t('status.delete_undone') : '已撤销删除操作';
+                    FloatingStatus.show(message, 'success', 2000);
+                }
+                console.log('删除撤销完成');
+                return true;
+            }
+            console.error('撤销删除失败：deletedFiles或selectedIndices无效');
+            return false;
         default:
+            updateUndoButtonState(); // 更新撤销按钮状态
             return false;
     }
+    
+    // 操作完成后更新撤销按钮状态
+    updateUndoButtonState();
 }
 
 // 追加导入图片文件
@@ -626,6 +735,52 @@ function appendImportFiles() {
     fileInput.click();
 }
 
+// 更新撤销按钮状态
+function updateUndoButtonState() {
+    const undoBtn = document.getElementById('undo-btn');
+    if (!undoBtn) return;
+    
+    const hasUndoableOperations = AppCore.appState.undoStack && AppCore.appState.undoStack.length > 0;
+    
+    if (hasUndoableOperations) {
+        undoBtn.style.display = 'inline-block';
+        // 更新按钮提示文本，显示可撤销的操作类型
+        const lastOperation = AppCore.appState.undoStack[AppCore.appState.undoStack.length - 1];
+        let tooltipKey = 'frame.controls.undo.tooltip';
+        if (lastOperation) {
+            switch (lastOperation.type) {
+                case 'delete':
+                    tooltipKey = 'frame.controls.undo.delete';
+                    break;
+                case 'drag-sort':
+                    tooltipKey = 'frame.controls.undo.sort';
+                    break;
+                case 'paste':
+                case 'paste-at-position':
+                    tooltipKey = 'frame.controls.undo.paste';
+                    break;
+                case 'append-import':
+                    tooltipKey = 'frame.controls.undo.import';
+                    break;
+            }
+        }
+        undoBtn.setAttribute('data-i18n-title', tooltipKey);
+        if (window.i18n) {
+            // 手动更新tooltip文本
+            const tooltipText = window.i18n.t(tooltipKey);
+            undoBtn.setAttribute('title', tooltipText);
+            // 同时更新按钮文本内容以确保国际化
+            const buttonText = window.i18n.t('frame.controls.undo');
+            const span = undoBtn.querySelector('span[data-i18n="frame.controls.undo"]');
+            if (span) {
+                span.textContent = buttonText;
+            }
+        }
+    } else {
+        undoBtn.style.display = 'none';
+    }
+}
+
 // 导出
 window.FileManager = {
     handleFileSelection,
@@ -640,6 +795,7 @@ window.FileManager = {
     appendImportFiles,
     undoLastOperation,
     moveFile,
+    updateUndoButtonState,
     updateSelectionUI,
     updateSelectionInfo
 };

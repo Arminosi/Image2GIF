@@ -152,9 +152,10 @@ class HistoryManagerV3 {
 
         // 关闭窗口
         closeBtn.addEventListener('click', () => this.closeWindow());
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) this.closeWindow();
-        });
+        // 注释：已删除点击背景关闭弹窗功能
+        // overlay.addEventListener('click', (e) => {
+        //     if (e.target === overlay) this.closeWindow();
+        // });
 
         // 清空全部按钮
         clearAllBtn.addEventListener('click', () => this.clearAllHistory());
@@ -577,12 +578,26 @@ class HistoryManagerV3 {
         try {
             console.log('开始导入序列帧:', item.sequenceFrames.length, '个帧');
             
-            // 清空当前文件列表
+            // 清空当前文件列表和重置所有状态
             if (window.AppCore && window.AppCore.appState) {
+                console.log('重置AppCore状态...');
                 window.AppCore.appState.reset();
+                
+                // 确保UI状态也被重置
+                const generateBtn = document.getElementById('generate-btn');
+                if (generateBtn) {
+                    generateBtn.disabled = true;
+                }
+                
+                // 清空文件列表显示
+                const fileListElement = document.getElementById('file-list');
+                if (fileListElement) {
+                    fileListElement.innerHTML = '';
+                }
             }
 
             // 创建文件对象数组
+            console.log('开始创建文件对象...');
             const files = [];
             for (let i = 0; i < item.sequenceFrames.length; i++) {
                 const frame = item.sequenceFrames[i];
@@ -599,11 +614,13 @@ class HistoryManagerV3 {
 
             // 使用文件管理器的标准处理流程
             if (window.FileManager && window.FileManager.handleFileSelection) {
+                console.log('调用FileManager.handleFileSelection处理文件...');
                 // 调用文件管理器的处理函数，这会自动更新UI
                 window.FileManager.handleFileSelection(files);
                 
                 console.log('已调用FileManager.handleFileSelection');
             } else {
+                console.log('FileManager.handleFileSelection不可用，使用备用方案...');
                 // 备用方案：手动处理
                 if (window.AppCore && window.AppCore.appState) {
                     window.AppCore.appState.selectedFiles = files;
@@ -714,7 +731,7 @@ class HistoryManagerV3 {
         }
 
         const totalCount = this.historyData.length;
-        const confirmMsg = `确定要清空所有 ${totalCount} 个历史记录吗？\n\n此操作不可撤销！`;
+        const confirmMsg = `确定要清空所有 ${totalCount} 个历史记录吗？`;
         
         if (confirm(confirmMsg)) {
             this.historyData = [];

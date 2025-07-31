@@ -170,6 +170,18 @@
     outline: none;
 }
 
+/* 隐藏页码输入框的spinner按钮，防止遮挡数字 */
+.page-input::-webkit-outer-spin-button,
+.page-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.page-input[type=number] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
 .page-input::placeholder {
     color: rgba(255, 255, 255, 0.6);
 }
@@ -527,23 +539,7 @@
 /* ================================
    加载动画
    ================================ */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 .history-card {
-    animation: fadeInUp 0.3s ease;
+    opacity: 1;
+    transform: translateY(0);
 }
-
-.history-card:nth-child(1) { animation-delay: 0.05s; }
-.history-card:nth-child(2) { animation-delay: 0.1s; }
-.history-card:nth-child(3) { animation-delay: 0.15s; }
-.history-card:nth-child(4) { animation-delay: 0.2s; }
-.history-card:nth-child(5) { animation-delay: 0.25s; }

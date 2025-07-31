@@ -36,6 +36,10 @@ class AppState {
         if (this.undoStack.length > 20) {
             this.undoStack.shift();
         }
+        // 更新撤销按钮状态
+        if (window.FileManager && typeof window.FileManager.updateUndoButtonState === 'function') {
+            window.FileManager.updateUndoButtonState();
+        }
     }
 
     // 执行撤销操作
@@ -106,6 +110,18 @@ class AppState {
                 newFrameDelays[newIndex] = this.frameDelays[oldIndex];
             }
         });
+        this.frameDelays = newFrameDelays;
+    }
+
+    // 重新索引帧延迟（当文件被插入或删除时）
+    reindexFrameDelays() {
+        const newFrameDelays = {};
+        // 根据当前文件数组的长度重新索引
+        for (let i = 0; i < this.selectedFiles.length; i++) {
+            if (this.frameDelays[i] !== undefined) {
+                newFrameDelays[i] = this.frameDelays[i];
+            }
+        }
         this.frameDelays = newFrameDelays;
     }
 }

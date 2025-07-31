@@ -62,12 +62,22 @@ function handlePasteShortcut() {
 function handleUndoShortcut() {
     if (AppCore.appState.canUndo()) {
         if (FileManager.undoLastOperation()) {
-            showStatusMessage('已撤销上一次操作', 'success');
+            // 成功消息已在undoLastOperation函数中处理，这里不重复显示
         } else {
-            showStatusMessage('撤销操作失败', 'error');
+            if (window.FloatingStatus) {
+                const message = window.i18n ? window.i18n.t('status.undo_failed') : '撤销操作失败';
+                FloatingStatus.show(message, 'error', 2000);
+            } else {
+                showStatusMessage('撤销操作失败', 'error');
+            }
         }
     } else {
-        showStatusMessage('没有可撤销的操作', 'error');
+        if (window.FloatingStatus) {
+            const message = window.i18n ? window.i18n.t('status.no_undo_available') : '没有可撤销的操作';
+            FloatingStatus.show(message, 'info', 2000);
+        } else {
+            showStatusMessage('没有可撤销的操作', 'info');
+        }
     }
 }
 
