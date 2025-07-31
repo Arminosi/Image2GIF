@@ -2,6 +2,8 @@
 
 - 直接使用：https://arminosi.github.io/PNG_to_GIF_Animation_Tool/
 
+- 还有一个精灵图切割工具：https://arminosi.github.io/SpriteSlice/
+
 - 这玩意也是AI写的，人工校验实现基本功能，耗时两天，主打一个能用就行
 - 至于花里胡哨的UI你别管，虽然有点吃资源但是我没能力优化。
 - 所有素材都是本地离线处理，不会上传到服务器（因为压根没用），包括历史文件，浏览器缓存没了文件也就没了。
