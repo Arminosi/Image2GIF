@@ -324,7 +324,7 @@ class HistoryManagerV3 {
                 </button>
                 ${item.sequenceFrames && item.sequenceFrames.length > 0 ? 
                     `<button class="card-btn btn-import" data-action="import" data-index="${index}" title="导入 ${item.sequenceFrames.length} 个序列帧">
-                        📥 导入序列
+                        📥 导入
                     </button>` : 
                     ''
                 }

@@ -1,6 +1,6 @@
 /**
- * 文件列表组件样式 - 现代化重写版本
- * @description 全新的卡片式文件管理界面
+ * 文件列表组件样式 - SpriteSlice风格
+ * @description 简洁现代的卡片式文件管理界面
  */
 
 /* ================================
@@ -12,567 +12,644 @@
 }
 
 /* ================================
-   文件列表容器 - 现代化设计
+   文件列表容器
    ================================ */
 .file-list {
-    margin-top: 25px;
+    margin-top: 0; /* 在右侧面板中不需要顶部边距 */
     padding: 0;
-    border: none;
-    border-radius: 20px;
-    background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(248,250,252,0.9));
-    backdrop-filter: blur(20px);
-    box-shadow: 
-        0 8px 32px rgba(0,0,0,0.08),
-        inset 0 1px 0 rgba(255,255,255,0.9);
-    transition: var(--transition-normal);
-    overflow: hidden;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-large);
+    background: var(--bg-primary);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    overflow: visible; /* 允许内容正常显示 */
+    min-height: 200px; /* 设置最小高度 */
 }
 
-.file-list:hover {
-    box-shadow: 
-        0 12px 40px rgba(0,0,0,0.12),
-        inset 0 1px 0 rgba(255,255,255,0.9);
-    transform: translateY(-2px);
+/* 在右侧面板中的特殊样式 */
+.right-panel .file-list {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+    margin-top: 0;
+    overflow: visible;
+}
+
+.file-list:not(:empty) {
+    display: block;
 }
 
 .file-list-header {
     width: 100%;
     margin: 0;
-    padding: 25px 30px 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    font-weight: 700;
-    font-size: 18px;
+    padding: var(--spacing-lg);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 1.1rem;
     text-align: center;
-    letter-spacing: 0.5px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    border-radius: 0;
-    box-shadow: none;
-    position: relative;
-}
-
-.file-list-header::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, 
-        rgba(255,255,255,0.3) 0%, 
-        rgba(255,255,255,0.8) 50%, 
-        rgba(255,255,255,0.3) 100%);
+    border-bottom: 1px solid var(--border-color);
 }
 
 /* ================================
-   控制面板 - 重新设计
+   控制面板
    ================================ */
 .selection-controls {
     width: 100%;
     margin: 0;
-    padding: 25px 30px;
-    background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(250,252,255,0.95));
-    border-bottom: 1px solid rgba(0,0,0,0.05);
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 15px;
+    padding: var(--spacing-md);
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
     align-items: center;
-    border-radius: 0;
-    box-shadow: none;
+    justify-content: center;
 }
 
 .selection-controls .control-btn {
-    padding: 12px 20px;
-    border: 2px solid transparent;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 14px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    font-size: 0.8rem;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    background: linear-gradient(145deg, #ffffff, #f0f4f8);
+    transition: var(--transition);
+    background: var(--bg-primary);
     color: var(--text-primary);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    min-height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .selection-controls .control-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-    border-color: var(--primary-blue);
-    background: linear-gradient(145deg, #ffffff, #f8fafc);
-}
-
-.selection-controls .control-btn:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-/* 追加导入按钮特殊样式 */
-#append-import-btn {
-    background: linear-gradient(145deg, #4CAF50, #45a049) !important;
-    color: white !important;
-    border: 2px solid #4CAF50 !important;
-    font-weight: 700;
-}
-
-#append-import-btn:hover {
-    background: linear-gradient(145deg, #45a049, #3d8b40) !important;
-    border-color: #45a049 !important;
-    box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3) !important;
-    transform: translateY(-3px);
-}
-
-#append-import-btn:active {
-    background: linear-gradient(145deg, #3d8b40, #2e7d32) !important;
+    background: var(--bg-light);
+    border-color: var(--text-secondary);
     transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
 }
 
+/* 选择信息显示 */
 .selection-info {
-    grid-column: 1 / -1;
-    text-align: center;
-    font-size: 14px;
+    font-size: 0.9rem;
     color: var(--text-secondary);
-    font-weight: 600;
-    padding: 15px 20px;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-    border-radius: 15px;
-    border: 2px solid rgba(102, 126, 234, 0.2);
-    margin-top: 10px;
+    font-weight: 500;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: var(--bg-light);
+    border-radius: var(--border-radius);
+    margin-right: var(--spacing-sm);
+}
+
+/* 选择模式相关样式 */
+.file-item.selection-mode {
+    border: 2px solid var(--border-color);
+    background: var(--bg-light);
+    transition: all 0.2s ease;
+}
+
+.file-item.selection-mode .checkbox-overlay {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.file-item.selected {
+    border-color: var(--accent-color);
+    background: rgba(79, 172, 254, 0.05);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.checkbox-overlay {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 20px;
+    height: 20px;
+    background: var(--bg-primary);
+    border: 2px solid var(--border-color);
+    border-radius: 3px;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    z-index: 5; /* 确保复选框在正确层级 */
+    cursor: pointer;
+}
+
+/* 隐藏可能存在的真实复选框 */
+.checkbox-overlay input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox-overlay.checked {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+    opacity: 1;
+}
+
+.checkbox-overlay.checked::after {
+    content: '✓';
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 /* ================================
-   文件网格容器
+   文件卡片网格
    ================================ */
 .file-grid-container {
-    padding: 30px;
-    max-height: 500px;
-    overflow-y: auto;
-    background: linear-gradient(145deg, rgba(255,255,255,0.8), rgba(248,250,252,0.8));
+    padding: var(--spacing-md); /* 减少内边距 */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .file-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(var(--card-size), 1fr));
-    gap: 15px;
-    justify-items: center;
+    gap: var(--spacing-md);
+    align-items: start;
+    justify-content: center;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+/* 排序状态下的网格样式 */
+.file-grid.sorting {
+    gap: calc(var(--spacing-md) * 1.5);
+}
+
+.file-grid.sorting .file-item:not(.dragging) {
+    transition: all 0.3s ease;
 }
 
 /* ================================
-   文件卡片 - 全新设计 (动态大小)
+   单个文件卡片
    ================================ */
 .file-item {
-    width: 100%;
-    max-width: var(--card-size);
-    background: linear-gradient(145deg, #ffffff, #f8fafc);
-    border: 2px solid rgba(226, 232, 240, 0.8);
-    border-radius: 20px;
+    width: 100%; /* 使用100%宽度，让网格控制实际大小 */
+    max-width: var(--card-size); /* 最大宽度由CSS变量控制 */
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    overflow: visible; /* 允许拖拽提示显示 */
+    transition: var(--transition);
     cursor: pointer;
-    user-select: none;
-    overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
-    box-shadow: 
-        0 4px 20px rgba(0,0,0,0.08),
-        0 1px 3px rgba(0,0,0,0.1);
-}
-
-.file-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #667eea, #764ba2);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    box-shadow: var(--shadow-sm);
+    z-index: 1; /* 基础层级 */
 }
 
 .file-item:hover {
-    border-color: var(--primary-blue);
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 
-        0 12px 40px rgba(33, 150, 243, 0.15),
-        0 4px 12px rgba(0,0,0,0.1);
-}
-
-.file-item:hover::before {
-    opacity: 1;
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+    z-index: 2; /* 悬停时提升层级 */
 }
 
 .file-item.selected {
-    border-color: #667eea;
-    background: linear-gradient(145deg, #f0f4ff, #e8f2ff);
-    transform: translateY(-4px);
-    box-shadow: 
-        0 8px 30px rgba(102, 126, 234, 0.2),
-        0 2px 8px rgba(0,0,0,0.1);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
 }
 
-.file-item.selected::before {
+.file-item.dragging {
+    opacity: 0.5;
+    transform: rotate(5deg);
+    z-index: 10; /* 拖拽时最高层级 */
+}
+
+/* 拖拽相关样式 */
+.file-item.dragging {
+    opacity: 0.6;
+    transform: rotate(3deg) scale(1.05);
+    z-index: 100; /* 拖拽时最高层级 */
+    filter: drop-shadow(0 8px 16px rgba(0,0,0,0.3));
+}
+
+/* 拖拽提示样式 */
+.drag-hint {
+    position: absolute;
+    bottom: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+    color: white;
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--border-radius-large);
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 15; /* 确保提示在最上层 */
+    pointer-events: none;
+    box-shadow: var(--shadow-lg);
+    font-weight: 600;
+}
+
+.file-item:hover .drag-hint,
+.file-item.dragging .drag-hint {
     opacity: 1;
+    transform: translateX(-50%) translateY(-5px);
+}
+
+/* 插入指示器 - 改进版 */
+.insert-indicator {
+    position: absolute;
+    width: 4px;
+    height: calc(100% + 20px);
+    top: -10px;
+    background: linear-gradient(180deg, 
+        transparent 0%,
+        var(--accent-color) 15%,
+        var(--accent-color) 85%,
+        transparent 100%
+    );
+    border-radius: 2px;
+    z-index: 50;
+    opacity: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 12px var(--accent-color);
+}
+
+.insert-indicator.active {
+    opacity: 1;
+    animation: insertPulse 1.5s ease-in-out infinite;
+}
+
+.insert-indicator.left {
+    left: -8px;
+}
+
+.insert-indicator.right {
+    right: -8px;
+}
+
+/* 插入指示器动画 */
+@keyframes insertPulse {
+    0%, 100% {
+        transform: scaleY(1);
+        box-shadow: 0 0 12px var(--accent-color);
+    }
+    50% {
+        transform: scaleY(1.1);
+        box-shadow: 0 0 20px var(--accent-color);
+    }
+}
+
+/* 交换区域高亮 */
+.file-item.swap-target {
+    background: linear-gradient(135deg, 
+        rgba(79, 172, 254, 0.1) 0%,
+        rgba(79, 172, 254, 0.2) 50%,
+        rgba(79, 172, 254, 0.1) 100%
+    );
+    border-color: var(--accent-color);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
+    animation: swapGlow 2s ease-in-out infinite;
+}
+
+@keyframes swapGlow {
+    0%, 100% {
+        box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
+    }
+    50% {
+        box-shadow: 0 8px 35px rgba(79, 172, 254, 0.5);
+    }
+}
+
+/* 拖拽预览幽灵 */
+.drag-preview-ghost {
+    position: fixed;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.8;
+    transform: rotate(5deg);
+    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.4));
+    transition: transform 0.1s ease;
+}
+
+/* 保持向后兼容的file-card类 */
+.file-card {
+    width: 100%; /* 使用100%宽度，让网格控制实际大小 */
+    max-width: var(--card-size); /* 最大宽度由CSS变量控制 */
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    transition: var(--transition);
+    cursor: pointer;
+    position: relative;
+    box-shadow: var(--shadow-sm);
+}
+
+.file-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.file-card.selected {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
+}
+
+.file-card.dragging {
+    opacity: 0.5;
+    transform: rotate(5deg);
 }
 
 /* ================================
-   文件预览图片
+   卡片预览区域
    ================================ */
 .file-preview-container {
-    position: relative;
     width: 100%;
     height: var(--card-preview-height);
+    position: relative;
+    background: var(--bg-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
-    background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
 }
 
 .file-preview {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transition: var(--transition);
 }
 
-.file-item:hover .file-preview {
-    transform: scale(1.1);
+.file-preview:hover {
+    transform: scale(1.05);
 }
 
-/* ================================
-   文件信息区域 - 优化紧凑版
-   ================================ */
-.file-info {
-    padding: 12px;
-    background: linear-gradient(145deg, #ffffff, #f8fafc);
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
+/* 文件头部信息 */
 .file-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
-    margin-bottom: 2px;
+    margin-bottom: var(--spacing-xs);
 }
 
 .file-number {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    padding: 3px 7px;
-    border-radius: 8px;
-    font-size: 10px;
-    font-weight: 700;
-    box-shadow: 0 2px 6px rgba(102, 126, 234, 0.25);
-    min-width: 24px;
-    text-align: center;
-    flex-shrink: 0;
-}
-
-.file-name {
-    font-size: 10px;
-    color: var(--text-primary);
+    background: var(--primary-color);
+    color: var(--text-white);
+    font-size: 0.7rem;
     font-weight: 600;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    flex: 1;
-    line-height: 1.2;
-    min-width: 0; /* 重要：允许文本缩放 */
+    padding: 2px 6px;
+    border-radius: 3px;
+    line-height: 1;
 }
 
 /* ================================
-   帧时间设置 - 优化紧凑版（响应式）
+   卡片信息区域
+   ================================ */
+.file-info {
+    padding: var(--spacing-sm);
+    background: var(--bg-primary);
+    border-top: 1px solid var(--border-color);
+}
+
+.file-name {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-xs);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-details {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-bottom: var(--spacing-xs);
+}
+
+.file-size {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+/* ================================
+   帧延时控制
    ================================ */
 .frame-delay-container {
     display: flex;
     align-items: center;
-    gap: 4px;
-    padding: 6px 8px;
-    background: linear-gradient(145deg, rgba(248,250,252,0.8), rgba(241,245,249,0.8));
-    border-radius: 8px;
-    border: 1px solid rgba(226, 232, 240, 0.8);
-    transition: var(--transition-fast);
-    font-size: 10px;
-    
-    /* 根据卡片大小动态调整 */
-    --input-width: clamp(50px, calc(var(--card-size) * 0.25), 65px);
-    --container-padding: clamp(4px, calc(var(--card-size) * 0.03), 8px);
-}
-
-.frame-delay-container:hover {
-    background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(248,250,252,0.9));
-    border-color: var(--primary-blue);
-    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.1);
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-xs);
 }
 
 .delay-label {
-    font-size: clamp(9px, calc(var(--card-size) * 0.04), 10px);
+    font-size: 0.7rem;
     color: var(--text-secondary);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    white-space: nowrap;
-    flex-shrink: 0;
+    font-weight: 500;
 }
 
 .frame-delay-input {
-    width: var(--input-width);
-    min-width: var(--input-width);
-    max-width: var(--input-width);
-    padding: clamp(2px, calc(var(--card-size) * 0.02), 4px) clamp(3px, calc(var(--card-size) * 0.025), 6px);
-    border: 1px solid rgba(226, 232, 240, 0.8);
-    border-radius: 4px;
-    font-size: clamp(9px, calc(var(--card-size) * 0.045), 11px);
-    font-weight: 600;
+    flex: 1;
+    padding: 2px 4px;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    font-size: 0.7rem;
     text-align: center;
-    background: white;
-    transition: all 0.3s ease;
-    color: var(--text-primary);
-    box-sizing: border-box;
-    flex-shrink: 0;
+    width: 50px;
+    min-width: 40px;
 }
 
 .frame-delay-input:focus {
     outline: none;
-    border-color: var(--primary-blue);
-    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.15);
-    background: #ffffff;
-}
-
-/* 响应式时长输入框 - 根据卡片大小调整 */
-@media (max-width: 768px) {
-    .frame-delay-container {
-        --input-width: clamp(45px, calc(var(--card-size) * 0.22), 60px);
-        gap: 3px;
-        padding: var(--container-padding);
-    }
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
 }
 
 .delay-unit {
-    font-size: clamp(8px, calc(var(--card-size) * 0.04), 10px);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* 保持兼容的旧类名 */
+.frame-delay-control {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-xs);
+}
+
+.frame-delay-control label {
+    font-size: 0.7rem;
     color: var(--text-secondary);
-    font-weight: 600;
-    text-transform: uppercase;
-    white-space: nowrap;
-    flex-shrink: 0;
+    font-weight: 500;
+}
+
+.frame-delay-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
 }
 
 /* ================================
-   选择复选框 - 重新设计
+   卡片操作按钮
    ================================ */
-.checkbox-overlay {
+.card-actions {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    top: var(--spacing-xs);
+    right: var(--spacing-xs);
+    display: flex;
+    gap: var(--spacing-xs);
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.file-card:hover .card-actions {
+    opacity: 1;
+}
+
+.card-action-btn {
     width: 24px;
     height: 24px;
-    background: rgba(255,255,255,0.95);
-    border-radius: 50%;
+    border: none;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--text-primary);
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 10;
-    border: 2px solid rgba(226, 232, 240, 0.8);
+    font-size: 0.8rem;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
 }
 
-.checkbox-overlay:hover {
-    background: rgba(255,255,255,1);
-    transform: scale(1.15);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-    border-color: var(--primary-blue);
-}
-
-.checkbox-overlay input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    margin: 0;
-    cursor: pointer;
-    accent-color: #667eea;
-    border-radius: 3px;
+.card-action-btn:hover {
+    background: var(--bg-primary);
+    transform: scale(1.1);
 }
 
 /* ================================
-   滚动条美化
+   序号标识
    ================================ */
-.file-grid-container::-webkit-scrollbar {
-    width: 10px;
-}
-
-.file-grid-container::-webkit-scrollbar-track {
-    background: rgba(248, 250, 252, 0.8);
-    border-radius: 10px;
-    margin: 10px 0;
-}
-
-.file-grid-container::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    border-radius: 10px;
-    border: 2px solid rgba(248, 250, 252, 0.8);
-}
-
-.file-grid-container::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #5a67d8, #6b46c1);
+.frame-index {
+    position: absolute;
+    top: var(--spacing-xs);
+    left: var(--spacing-xs);
+    background: var(--primary-color);
+    color: var(--text-white);
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 3px;
+    line-height: 1;
+    box-shadow: var(--shadow-sm);
 }
 
 /* ================================
-   响应式设计 - 保持动态卡片大小
+   空状态
+   ================================ */
+.file-list-empty {
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.file-list-empty-icon {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-md);
+    opacity: 0.5;
+}
+
+/* ================================
+   响应式设计
    ================================ */
 @media (max-width: 768px) {
     .file-grid {
-        grid-template-columns: repeat(auto-fill, minmax(calc(var(--card-size) * 0.87), 1fr));
-        gap: 12px;
-    }
-    
-    .file-item {
-        max-width: calc(var(--card-size) * 0.87);
-    }
-    
-    .file-preview-container {
-        height: calc(var(--card-preview-height) * 0.83);
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        padding: var(--spacing-md);
+        gap: var(--spacing-sm);
     }
     
     .selection-controls {
-        grid-template-columns: 1fr;
-        gap: 12px;
-        padding: 20px;
+        padding: var(--spacing-sm);
+        gap: var(--spacing-xs);
     }
     
-    .file-list-header {
-        padding: 20px;
-        font-size: 16px;
-    }
-    
-    .file-grid-container {
-        padding: 20px;
+    .selection-controls .control-btn {
+        font-size: 0.7rem;
+        padding: var(--spacing-xs);
     }
 }
 
 @media (max-width: 480px) {
     .file-grid {
-        grid-template-columns: repeat(auto-fill, minmax(calc(var(--card-size) * 0.73), 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     }
     
-    .file-item {
-        max-width: calc(var(--card-size) * 0.73);
-    }
-    
-    .file-preview-container {
-        height: calc(var(--card-preview-height) * 0.71);
+    .selection-controls {
+        grid-template-columns: 1fr 1fr;
     }
 }
 
 /* ================================
-   拖拽排序功能样式
+   右侧面板中的文件列表特殊样式
    ================================ */
-.file-item.dragging {
-    opacity: 0.7;
-    transform: scale(0.95) rotate(3deg);
-    z-index: 1000;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-    border: 2px solid var(--primary-blue);
-    background: linear-gradient(145deg, #e3f2fd, #bbdefb);
-    cursor: grabbing !important;
+.right-panel .file-list {
+    margin-top: 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0 var(--spacing-xs); /* 添加小的内边距避免滚动条贴边 */
 }
 
-.file-item.drag-over {
-    border: 3px dashed var(--primary-blue);
-    background: linear-gradient(145deg, #e8f5e8, #c8e6c9);
-    transform: scale(1.05);
-    box-shadow: 0 0 20px rgba(76, 175, 80, 0.4);
+.right-panel .file-list:empty::after {
+    content: '🎬\A还没有帧序列\A点击左侧"选择PNG文件"按钮开始';
+    white-space: pre-line;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-xl);
+    color: var(--text-secondary);
+    text-align: center;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    height: 200px;
 }
 
-.file-item {
-    cursor: grab;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+/* 右侧面板中的文件网格调整 */
+.right-panel .file-grid-container {
+    padding: var(--spacing-md);
+    overflow: visible; /* 允许拖拽提示显示 */
 }
 
-.file-item:active {
-    cursor: grabbing;
+.right-panel .file-grid {
+    grid-template-columns: repeat(auto-fill, minmax(var(--card-size), 1fr));
+    gap: var(--spacing-md);
+    padding-bottom: var(--spacing-lg); /* 为拖拽提示留出空间 */
 }
 
-/* 拖拽时的排序指示器 */
-.sort-indicator {
-    position: absolute;
-    top: -5px;
-    left: -4px;
-    width: 8px;
-    height: calc(100% + 10px);
-    background: linear-gradient(180deg, #2196F3, #1976D2);
-    border-radius: 4px;
-    opacity: 0;
-    transform: scaleY(0);
-    transition: all 0.3s ease;
-    z-index: 100;
-    box-shadow: 0 0 15px rgba(33, 150, 243, 0.6);
+.right-panel .file-item {
+    width: 100%;
+    max-width: var(--card-size); /* 使用CSS变量控制最大宽度 */
 }
 
-.sort-indicator.show {
-    opacity: 1;
-    transform: scaleY(1);
+/* 右侧面板中的选择控制器调整 */
+.right-panel .selection-controls {
+    padding: var(--spacing-sm) var(--spacing-md);
 }
 
-.sort-indicator.right {
-    left: auto;
-    right: -4px;
-}
-
-/* 插入位置指示器动画 */
-.sort-indicator::before {
-    content: '';
-    position: absolute;
-    top: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
-    border-bottom: 8px solid #2196F3;
-}
-
-.sort-indicator::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
-    border-top: 8px solid #1976D2;
-}
-
-/* 拖拽提示信息 */
-.drag-hint {
-    position: absolute;
-    top: -35px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: 500;
-    white-space: nowrap;
-    pointer-events: none;
-    opacity: 0;
-    transition: all 0.3s ease;
-    z-index: 1001;
-}
-
-.file-item.dragging .drag-hint {
-    opacity: 1;
-}
-
-/* 禁用文本选择 */
-.file-list.sorting {
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
+.right-panel .selection-controls .control-btn {
+    font-size: 0.8rem;
+    padding: var(--spacing-xs) var(--spacing-sm);
 }

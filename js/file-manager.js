@@ -31,26 +31,37 @@ function displayFileList() {
     const fileListElement = document.getElementById('file-list');
     fileListElement.innerHTML = '';
     
-    // 如果有文件，显示卡片大小控制器
-    if (AppCore.appState.selectedFiles.length > 0) {
-        if (window.CardSizeController) {
-            CardSizeController.show();
-        }
-    } else {
-        // 没有文件时隐藏卡片大小控制器
+    // 如果没有文件，显示空状态
+    if (AppCore.appState.selectedFiles.length === 0) {
+        // 隐藏卡片大小控制器
         if (window.CardSizeController) {
             CardSizeController.hide();
         }
+        
+        // 显示空状态提示
+        const emptyState = document.createElement('div');
+        emptyState.className = 'empty-state';
+        emptyState.innerHTML = `
+            <div class="empty-state-icon">📁</div>
+            <div class="empty-state-text">还没有选择文件</div>
+            <div class="empty-state-hint">请点击"选择PNG文件"按钮导入图片</div>
+        `;
+        fileListElement.appendChild(emptyState);
         return;
+    }
+    
+    // 如果有文件，显示卡片大小控制器
+    if (window.CardSizeController) {
+        CardSizeController.show();
     }
     
     // 添加标题
     const header = document.createElement('div');
     header.className = 'file-list-header';
     header.innerHTML = `
-        <div>📁 已选择的文件</div>
+        <div>📁 已导入的帧</div>
         <div style="font-size: 14px; font-weight: 400; margin-top: 5px; opacity: 0.9;">
-            选择模式 • 复选框批量操作 • Ctrl+C/V 复制粘贴
+          可以拖拽排序 • Ctrl+C/V 复制粘贴
         </div>
     `;
     fileListElement.appendChild(header);
@@ -143,19 +154,23 @@ function createFileItem(file, index) {
     // 创建选择复选框
     const checkboxOverlay = document.createElement('div');
     checkboxOverlay.className = 'checkbox-overlay';
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.checked = AppCore.appState.selectedIndices.has(index);
-    checkbox.onchange = (e) => {
-        e.stopPropagation();
-        toggleSelection(index, e.target.checked);
-    };
+    checkboxOverlay.dataset.index = index;
     
-    checkbox.addEventListener('mousedown', function(e) {
+    // 根据选中状态设置样式
+    if (AppCore.appState.selectedIndices.has(index)) {
+        checkboxOverlay.classList.add('checked');
+    }
+    
+    // 点击事件处理
+    checkboxOverlay.addEventListener('click', function(e) {
         e.stopPropagation();
+        const isCurrentlySelected = AppCore.appState.selectedIndices.has(index);
+        toggleSelection(index, !isCurrentlySelected);
     });
     
-    checkboxOverlay.appendChild(checkbox);
+    checkboxOverlay.addEventListener('mousedown', function(e) {
+        e.stopPropagation();
+    });
     
     // 创建图片预览容器
     const previewContainer = document.createElement('div');
@@ -359,13 +374,15 @@ function deleteSelected() {
 // 更新选择相关的UI
 function updateSelectionUI() {
     document.querySelectorAll('.file-item').forEach((item, index) => {
-        const checkbox = item.querySelector('input[type="checkbox"]');
+        const checkboxOverlay = item.querySelector('.checkbox-overlay');
         const isSelected = AppCore.appState.selectedIndices.has(index);
-        checkbox.checked = isSelected;
         
+        // 更新复选框样式
         if (isSelected) {
+            checkboxOverlay.classList.add('checked');
             item.classList.add('selected');
         } else {
+            checkboxOverlay.classList.remove('checked');
             item.classList.remove('selected');
         }
     });

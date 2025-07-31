@@ -61,7 +61,7 @@ class DragSortController {
         if (!fileItem.querySelector('.drag-hint')) {
             const dragHint = document.createElement('div');
             dragHint.className = 'drag-hint';
-            dragHint.textContent = '拖拽到其他卡片之间插入';
+            dragHint.textContent = '🔄 拖拽到其他位置重新排序';
             fileItem.appendChild(dragHint);
         }
         
@@ -129,7 +129,7 @@ class DragSortController {
         
         const currentItem = e.target.closest('.file-item');
         if (currentItem && currentItem !== this.draggedItem) {
-            this.showDropIndicator(currentItem, e);
+            this.showInsertIndicator(currentItem, e);
         }
     }
     
@@ -138,36 +138,27 @@ class DragSortController {
         e.preventDefault();
         const currentItem = e.target.closest('.file-item');
         if (currentItem && currentItem !== this.draggedItem) {
-            // 移除其他项的高亮
-            document.querySelectorAll('.file-item.drag-over').forEach(item => {
-                item.classList.remove('drag-over');
-            });
+            // 清除之前的高亮
+            this.clearAllHighlights();
             
-            currentItem.classList.add('drag-over');
+            // 高亮当前目标
+            currentItem.classList.add('swap-target');
             this.dragOverItem = currentItem;
             
             // 更新拖拽提示
-            const dragHint = this.draggedItem.querySelector('.drag-hint');
-            if (dragHint) {
-                const rect = currentItem.getBoundingClientRect();
-                const mouseX = e.clientX;
-                const centerX = rect.left + rect.width / 2;
-                
-                if (mouseX < centerX) {
-                    dragHint.textContent = '松开鼠标插入到此位置之前';
-                } else {
-                    dragHint.textContent = '松开鼠标插入到此位置之后';
-                }
-            }
+            this.updateDragHint(currentItem, e);
         }
     }
     
     // 离开拖拽区域
     handleDragLeave(e) {
+        const relatedTarget = e.relatedTarget;
         const currentItem = e.target.closest('.file-item');
-        if (currentItem) {
-            currentItem.classList.remove('drag-over');
-            this.hideDropIndicator();
+        
+        // 只有当真正离开文件项时才清除高亮
+        if (currentItem && (!relatedTarget || !currentItem.contains(relatedTarget))) {
+            this.clearAllHighlights();
+            this.hideInsertIndicator();
         }
     }
     
@@ -194,6 +185,14 @@ class DragSortController {
     
     // 拖拽结束
     handleDragEnd(e) {
+        console.log('=== 拖拽结束 ===');
+        
+        // 移除网格的排序状态
+        const fileGrid = document.querySelector('.file-grid');
+        if (fileGrid) {
+            fileGrid.classList.remove('sorting');
+        }
+        
         this.resetDragState();
     }
     
@@ -376,6 +375,87 @@ class DragSortController {
         });
         
         fileGrid.classList.remove('sorting-enabled');
+    }
+    
+    // 显示插入指示器
+    showInsertIndicator(targetItem, e) {
+        this.hideInsertIndicator();
+        
+        const rect = targetItem.getBoundingClientRect();
+        const mouseX = e.clientX;
+        const centerX = rect.left + rect.width / 2;
+        
+        const indicator = document.createElement('div');
+        indicator.className = 'insert-indicator active';
+        indicator.id = 'drag-insert-indicator';
+        
+        if (mouseX < centerX) {
+            indicator.classList.add('left');
+        } else {
+            indicator.classList.add('right');
+        }
+        
+        targetItem.appendChild(indicator);
+    }
+    
+    // 隐藏插入指示器
+    hideInsertIndicator() {
+        const existing = document.getElementById('drag-insert-indicator');
+        if (existing) {
+            existing.remove();
+        }
+    }
+    
+    // 清除所有高亮
+    clearAllHighlights() {
+        document.querySelectorAll('.file-item.swap-target, .file-item.drag-over').forEach(item => {
+            item.classList.remove('swap-target', 'drag-over');
+        });
+    }
+    
+    // 更新拖拽提示
+    updateDragHint(targetItem, e) {
+        const dragHint = this.draggedItem.querySelector('.drag-hint');
+        if (!dragHint) return;
+        
+        const rect = targetItem.getBoundingClientRect();
+        const mouseX = e.clientX;
+        const centerX = rect.left + rect.width / 2;
+        const targetIndex = parseInt(targetItem.dataset.index);
+        const currentIndex = this.draggedIndex;
+        
+        if (mouseX < centerX) {
+            if (targetIndex < currentIndex) {
+                dragHint.textContent = `📤 移动到第 ${targetIndex + 1} 位`;
+            } else {
+                dragHint.textContent = `📤 移动到第 ${targetIndex} 位`;
+            }
+        } else {
+            if (targetIndex < currentIndex) {
+                dragHint.textContent = `📤 移动到第 ${targetIndex + 2} 位`;
+            } else {
+                dragHint.textContent = `📤 移动到第 ${targetIndex + 1} 位`;
+            }
+        }
+    }
+    
+    // 重置拖拽状态
+    resetDragState() {
+        if (this.draggedItem) {
+            this.draggedItem.classList.remove('dragging');
+            const dragHint = this.draggedItem.querySelector('.drag-hint');
+            if (dragHint) {
+                dragHint.textContent = '🔄 拖拽到其他位置重新排序';
+            }
+        }
+        
+        this.clearAllHighlights();
+        this.hideInsertIndicator();
+        
+        this.draggedItem = null;
+        this.draggedIndex = null;
+        this.dragOverItem = null;
+        this.isActive = false;
     }
 }
 
